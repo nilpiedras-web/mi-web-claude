@@ -1,0 +1,1047 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heroes Academy</title>
+<meta name="description" content="Aprende a dominar todos los aspectos de tu vida">
+
+<!-- Tipografías originales del sitio (Inter, Inter Tight, Fragment Mono) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800;900&family=Fragment+Mono&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   TOKENS DE COLOR  (extraídos de las variables :root del original)
+   Cambia un valor aquí y se actualiza en toda la página.
+   ============================================================ */
+:root{
+  --base:#0e0e0e;          /* fondo de la página       */
+  --surface:#161616;       /* fondo de tarjetas        */
+  --surface-2:rgba(255,255,255,.04);
+  --line:#292929;          /* bordes                   */
+  --line-soft:#3d3d3d;     /* bordes de tarjetas       */
+  --primary:#0968ff;       /* azul (acentos puntuales) */
+  --primary-light:#3884ff;
+  --cta:#e55415;           /* NARANJA del botón CTA (como el original) */
+  --cta-light:#ff6a2b;     /* hover del botón          */
+  --accent:#ff9f40;        /* naranja acento           */
+  --accent-soft:rgba(255,159,64,.2);
+  --danger:#ff5c5c;        /* rojo (villano/urgencia)  */
+  --success:#80ffae;       /* verde (héroe/checks)     */
+  --white:#ffffff;
+  --muted:#bdbdbd;         /* texto secundario         */
+  --muted-2:#7d7f83;       /* texto terciario          */
+  --trust:#00b67a;         /* estrellas Trustpilot     */
+
+  /* Tipografías */
+  --font-body:"Inter","Inter Placeholder",sans-serif;
+  --font-display:"Inter Tight","Inter Display",sans-serif;
+  --font-mono:"Fragment Mono",ui-monospace,monospace;
+
+  /* Sombra de elevación reutilizada en píldoras y tarjetas */
+  --shadow-lift:0 .78px .39px -.36px rgba(0,0,0,.1),0 1.9px .96px -.71px rgba(0,0,0,.1),
+                0 3.64px 1.82px -1.07px rgba(0,0,0,.1),0 6.35px 3.18px -1.43px rgba(0,0,0,.1),
+                0 11.05px 5.53px -1.79px rgba(0,0,0,.1),0 20.24px 10.12px -2.14px rgba(0,0,0,.1),
+                0 40px 20px -2.5px rgba(0,0,0,.1);
+}
+
+/* ============================================================
+   RESET Y BASE
+   ============================================================ */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--base);
+  color:var(--white);
+  font-family:var(--font-body);
+  line-height:1.5;
+  overflow-x:hidden;
+}
+img{display:block;max-width:100%;}
+a{color:inherit;text-decoration:none;}
+
+/* Contenedor central de cada sección */
+.section{
+  width:100%;
+  max-width:1200px;
+  margin:0 auto;
+  padding:96px 100px;
+}
+.inner{max-width:1000px;margin:0 auto;width:100%;}
+
+/* ============================================================
+   TIPOGRAFÍA  (tamaños tomados de los presets del original)
+   ============================================================ */
+.eyebrow{                       /* etiqueta mono (ej. "Problema 1") */
+  display:inline-block;
+  font-family:var(--font-mono);
+  font-size:13px;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  color:var(--accent);
+  background:var(--accent-soft);
+  border-radius:8px;
+  padding:8px 16px;
+  box-shadow:var(--shadow-lift);
+}
+.h2{font-family:var(--font-display);font-weight:600;font-size:44px;line-height:1;}
+.h4{font-family:var(--font-display);font-weight:600;font-size:28px;line-height:1.2;}
+.lead{font-family:var(--font-display);font-size:20px;line-height:1.4;color:#cccccc;}
+.body{font-size:16px;line-height:1.5;color:var(--muted);}
+.caption{font-size:14px;color:var(--muted);font-weight:500;}
+.accent{color:var(--accent);}
+.danger{color:var(--danger);}
+.success{color:var(--success);}
+
+/* ============================================================
+   BOTÓN CTA  (azul sólido con resplandor)
+   ============================================================ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:600;font-size:16px;
+  color:var(--white);
+  background:var(--cta);
+  border:none;cursor:pointer;
+  padding:16px 32px;border-radius:12px;
+  box-shadow:0 8px 24px rgba(229,84,21,.28);
+  transition:transform .2s ease,background .2s ease;
+}
+.btn:hover{background:var(--cta-light);transform:translateY(-2px);}
+.btn:active{transform:translateY(0);}
+.btn:focus-visible{outline:2px solid var(--cta-light);outline-offset:3px;}
+.btn--full{width:100%;}
+
+/* ============================================================
+   VALORACIÓN (estrellas estilo Trustpilot)
+   ============================================================ */
+.rating{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.stars{display:flex;gap:4px;}
+.stars svg{width:22px;height:22px;}
+.rating__label{font-size:14px;color:var(--muted);}
+.rating__label b{color:var(--white);font-weight:600;}
+
+/* ============================================================
+   1 · HERO
+   ============================================================ */
+.hero{
+  position:relative;
+  min-height:auto;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;
+  padding:120px 24px 80px;
+  overflow:hidden;
+}
+.hero>*{position:relative;z-index:1;}
+.hero__inner{max-width:1000px;display:flex;flex-direction:column;align-items:center;gap:28px;}
+.hero__eyebrow{font-family:var(--font-display);font-size:20px;color:var(--muted);}
+.hero h1{
+  /* Titular con mezcla de cursiva y negrita, como el original (~50px, Inter Display) */
+  font-family:var(--font-display);font-weight:600;
+  font-size:clamp(38px,5.4vw,54px);line-height:1.04;letter-spacing:-.01em;
+  text-wrap:balance;max-width:920px;
+}
+.hero h1 em{font-style:italic;font-weight:600;}
+.hero h1 b{font-style:normal;font-weight:800;}
+.hero .lead{max-width:720px;}
+
+/* Vídeo principal (VSL) del hero */
+.vsl{
+  width:100%;max-width:760px;aspect-ratio:16/9;margin:8px 0;
+  border-radius:14px;overflow:hidden;position:relative;cursor:pointer;
+  border:1px solid var(--line);box-shadow:var(--shadow-lift);
+  background:#0a0a0a;
+}
+.vsl img{width:100%;height:100%;object-fit:cover;}
+.vsl__play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.vsl__play span{
+  width:72px;height:72px;border-radius:50%;
+  background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
+  border:1px solid rgba(255,255,255,.3);
+  display:flex;align-items:center;justify-content:center;
+}
+.vsl__play svg{width:26px;height:26px;margin-left:4px;fill:#fff;}
+
+/* ============================================================
+   2 · VÍDEO-TESTIMONIOS
+   ============================================================ */
+.videos__grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px;
+}
+.video{
+  background:var(--surface);border:1px solid var(--line);border-radius:16px;
+  overflow:hidden;display:flex;flex-direction:column;
+}
+.video__frame{
+  position:relative;aspect-ratio:16/9;background:#000;cursor:pointer;
+}
+.video__frame img{width:100%;height:100%;object-fit:cover;opacity:.85;transition:opacity .2s;}
+.video__frame:hover img{opacity:1;}
+.video__play{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+}
+.video__play span{
+  width:60px;height:60px;border-radius:50%;
+  background:rgba(0,0,0,.6);backdrop-filter:blur(4px);
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(255,255,255,.25);
+}
+.video__play svg{width:22px;height:22px;margin-left:3px;fill:#fff;}
+.video__caption{padding:18px 20px;font-size:14px;line-height:1.45;color:var(--muted);}
+
+/* ============================================================
+   3 · HÉROES VS VILLANOS
+   ============================================================ */
+.center{text-align:center;}
+.head--center{max-width:760px;margin:0 auto 56px;text-align:center;}
+.head--center .h2{font-size:clamp(28px,4vw,44px);line-height:1.1;}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:880px;margin:0 auto;}
+.quote{
+  background:var(--surface-2);border:1px solid var(--line-soft);
+  border-radius:16px;padding:32px;text-align:center;
+}
+.quote--villain{border-color:rgba(255,92,92,.3);}
+.quote--hero{border-color:rgba(128,255,174,.3);}
+.quote h3{font-family:var(--font-display);font-size:20px;font-weight:600;margin-bottom:12px;}
+.quote p{font-style:italic;font-size:18px;line-height:1.5;}
+.choose{margin-top:48px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;}
+.choose .h4{font-size:26px;}
+
+/* ============================================================
+   4 · HISTORIA PERSONAL
+   ============================================================ */
+.story{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;max-width:1000px;margin:0 auto;}
+.story__text{display:flex;flex-direction:column;gap:18px;}
+.story__text .h2{font-size:clamp(28px,3.5vw,40px);line-height:1.1;}
+.story__lines p{font-size:18px;color:var(--muted);line-height:1.6;}
+.story__lines p strong{color:var(--white);}
+.story__img{
+  border-radius:14px;overflow:hidden;border:1px solid var(--line);
+  box-shadow:var(--shadow-lift);aspect-ratio:1/1;
+}
+.story__img img{width:100%;height:100%;object-fit:cover;}
+
+/* ============================================================
+   5 · HEROES PROTOCOL
+   ============================================================ */
+.protocol__head{text-align:center;max-width:760px;margin:0 auto 80px;
+  display:flex;flex-direction:column;align-items:center;gap:20px;}
+.protocol__head h2{
+  font-family:var(--font-display);font-weight:800;
+  font-size:clamp(40px,6vw,64px);text-transform:uppercase;letter-spacing:-.02em;line-height:1;
+}
+/* Línea de tiempo central con relleno naranja al hacer scroll */
+.protocol__timeline{position:relative;}
+.spine{
+  position:absolute;left:50%;top:0;bottom:0;width:3px;transform:translateX(-50%);
+  background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;z-index:0;
+}
+.spine__fill{
+  position:absolute;left:0;top:0;width:100%;height:0;
+  background:var(--cta);border-radius:2px;
+  transition:height .12s linear;
+}
+.problems{display:flex;flex-direction:column;gap:120px;position:relative;z-index:1;max-width:1080px;margin:0 auto;}
+/* Cada bloque: contenido APILADO a la derecha de la línea (como en el original).
+   Arriba el título (junto al punto), debajo el texto secundario y la foto. */
+.problem{--tilt:-3deg;position:relative;display:flex;flex-direction:column;gap:28px;padding-left:calc(50% + 110px);}
+/* Alternar lados: los pares van a la IZQUIERDA de la línea.
+   El contenido se alinea a la IZQUIERDA en ambos lados (como el original),
+   así los bloques de la izquierda quedan separados de la línea. */
+.problem:nth-child(even){--tilt:3deg;padding-left:0;padding-right:calc(50% + 110px);}
+/* Revelado sincronizado con la línea (los puntos quedan siempre visibles).
+   La imagen conserva su ligera inclinación también al animarse. */
+body.reveal-on .problem__text{opacity:0;transform:translateY(40px);transition:opacity .6s ease,transform .6s ease;}
+body.reveal-on .problem__img{opacity:0;transform:translateY(40px) rotate(var(--tilt));transition:opacity .6s ease,transform .6s ease;transition-delay:.1s;}
+body.reveal-on .problem.reveal .problem__text{opacity:1;transform:none;}
+body.reveal-on .problem.reveal .problem__img{opacity:1;transform:rotate(var(--tilt));transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s ease,opacity .45s ease;}
+/* Hover: la tarjeta se endereza, crece un poco y la sombra se intensifica */
+body.reveal-on .problem.reveal .problem__img:hover{transform:rotate(0deg) scale(1.05);box-shadow:0 26px 70px rgba(0,0,0,.55);z-index:5;}
+/* Punto sobre la línea: apagado (OPACO) por defecto, se ILUMINA a blanco al llegar.
+   Es opaco para que la línea no se transparente dentro del punto. */
+.dot{
+  position:absolute;left:50%;top:18px;transform:translateX(-50%);
+  width:15px;height:15px;border-radius:50%;
+  background:#4a4a4a;                          /* apagado, opaco */
+  z-index:3;box-shadow:0 0 0 16px var(--base);  /* hueco amplio alrededor */
+  transition:background .25s ease;
+}
+.problem.reveal .dot{ background:#fff; }        /* blanco limpio al llegar la línea */
+.problem__text{display:flex;flex-direction:column;gap:18px;max-width:520px;}
+.problem__text h3{font-family:var(--font-display);font-size:36px;font-weight:600;line-height:1.08;letter-spacing:0;}
+/* "PROBLEMA N": texto naranja plano (sin píldora) */
+.problem__text .eyebrow{align-self:flex-start;background:none;box-shadow:none;padding:0;color:var(--cta);font-family:var(--font-mono);font-size:13px;letter-spacing:.12em;}
+.problem__text p{color:var(--muted);font-size:16px;line-height:1.4;}
+.problem__img{
+  position:relative;z-index:1;
+  max-width:330px;border-radius:12px;overflow:hidden;border:1px solid var(--line);
+  box-shadow:var(--shadow-lift);aspect-ratio:.988/1;transform:rotate(var(--tilt));
+  cursor:zoom-in;
+  transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s ease;
+}
+.problem__img:hover{transform:rotate(0deg) scale(1.05);box-shadow:0 26px 70px rgba(0,0,0,.55);z-index:5;}
+.problem__img img{width:100%;height:100%;object-fit:cover;}
+.protocol__cta{text-align:center;margin-top:80px;}
+
+/* ============================================================
+   6 · STACK DE VALOR (oferta)
+   ============================================================ */
+.offer{max-width:780px;margin:0 auto;background:var(--surface);
+  border:1px solid var(--line);border-radius:24px;padding:48px;}
+.offer h2{text-align:center;font-family:var(--font-display);font-weight:700;
+  font-size:clamp(26px,3.5vw,36px);line-height:1.15;}
+.offer__list{list-style:none;margin:40px 0 0;display:flex;flex-direction:column;gap:18px;}
+.check{display:flex;align-items:flex-start;gap:12px;}
+.check svg{width:20px;height:20px;margin-top:3px;flex-shrink:0;fill:var(--success);}
+.check span{font-size:15px;line-height:1.55;color:var(--muted);}
+.offer__divider{border:none;border-top:1px solid var(--line);margin:32px 0;}
+.offer__total{text-align:center;font-family:var(--font-display);font-weight:700;font-size:22px;}
+.offer__total s{color:var(--accent);}
+.offer__price{text-align:center;margin-top:32px;}
+.offer__price .small{font-size:18px;color:var(--muted);}
+.offer__price .big{font-family:var(--font-display);font-weight:800;font-size:clamp(56px,8vw,72px);line-height:1;}
+.offer__price .per{font-family:var(--font-body);font-size:18px;color:var(--muted);font-weight:400;margin-left:8px;}
+.offer__urgency{margin-top:12px;font-weight:600;color:var(--danger);}
+.offer__cta{text-align:center;margin-top:32px;}
+
+/* ============================================================
+   7 · TESTIMONIOS (masonry con columnas)
+   ============================================================ */
+.reviews__head{text-align:center;max-width:760px;margin:0 auto 56px;}
+.reviews__head .h2{font-size:clamp(26px,3.5vw,40px);line-height:1.15;}
+.masonry{columns:3;column-gap:24px;}
+.review{
+  break-inside:avoid;margin-bottom:24px;
+  background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;
+}
+.review__q{font-family:var(--font-display);font-size:30px;font-weight:700;color:var(--accent);line-height:1;}
+.review h3{font-family:var(--font-display);font-size:18px;font-weight:600;line-height:1.3;margin-top:4px;}
+.review p{font-size:14px;line-height:1.6;color:var(--muted);margin-top:12px;}
+.review__author{display:flex;align-items:center;gap:12px;margin-top:20px;}
+.review__author img{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);object-fit:cover;}
+.review__author span{font-size:14px;font-weight:500;}
+
+/* ============================================================
+   8 · PRECIOS
+   ============================================================ */
+.pricing__head{text-align:center;max-width:760px;margin:0 auto 56px;
+  display:flex;flex-direction:column;align-items:center;gap:20px;}
+.pricing__head .h2{font-size:clamp(28px,4vw,44px);line-height:1.1;}
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:880px;margin:0 auto;}
+.plan{
+  background:var(--surface);border:1px solid var(--line);border-radius:24px;
+  padding:36px;display:flex;flex-direction:column;
+}
+.plan--featured{border-color:rgba(229,84,21,.6);box-shadow:0 0 30px rgba(229,84,21,.25);}
+.plan__name{font-family:var(--font-display);font-size:20px;font-weight:600;color:var(--muted);}
+.plan__price{display:flex;align-items:baseline;gap:12px;margin-top:12px;}
+.plan__price s{font-size:24px;color:var(--muted-2);}
+.plan__price b{font-family:var(--font-display);font-size:48px;font-weight:800;}
+.plan__price small{font-size:14px;color:var(--muted);}
+.plan__features{list-style:none;margin:28px 0;display:flex;flex-direction:column;gap:16px;flex:1;}
+.plan__note{text-align:center;margin-top:16px;font-size:14px;font-weight:500;color:var(--accent);}
+
+/* Cuenta atrás */
+.countdown{display:flex;justify-content:center;gap:16px;margin-top:56px;}
+.cdbox{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.cdbox b{
+  width:72px;height:72px;display:flex;align-items:center;justify-content:center;
+  background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  font-family:var(--font-display);font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;
+}
+.cdbox span{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2);}
+
+/* ============================================================
+   9 · CARRUSEL DUDAS → RESULTADOS
+   ============================================================ */
+.doubts__head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:40px;flex-wrap:wrap;}
+.doubts__head .h2{max-width:640px;font-size:clamp(26px,3.5vw,40px);line-height:1.15;}
+.arrows{display:flex;gap:12px;}
+.arrow{
+  width:44px;height:44px;border-radius:50%;background:var(--surface);
+  border:1px solid var(--line);color:#fff;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s;
+}
+.arrow:hover{background:rgba(255,255,255,.1);border-color:var(--line-soft);}
+.arrow:focus-visible{outline:2px solid var(--primary-light);outline-offset:2px;}
+.arrow svg{width:20px;height:20px;fill:currentColor;}
+.track{
+  display:flex;gap:24px;overflow-x:auto;scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;padding-bottom:8px;margin:0 -100px;padding-left:100px;padding-right:100px;
+  scrollbar-width:none;
+}
+.track::-webkit-scrollbar{display:none;}
+.dcard{
+  flex:0 0 380px;max-width:85vw;scroll-snap-align:start;
+  background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px;
+}
+.dcard h3{font-family:var(--font-display);font-size:18px;font-weight:600;line-height:1.3;}
+.dcard p{font-size:14px;line-height:1.6;color:var(--muted);margin-top:12px;}
+.dcard__author{display:flex;align-items:center;gap:12px;margin-top:20px;}
+.dcard__author img{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);object-fit:cover;}
+.dcard__author b{font-size:14px;font-weight:500;display:block;}
+.dcard__author small{font-size:12px;color:var(--muted-2);}
+
+/* ============================================================
+   10 · CTA FINAL + FOOTER
+   ============================================================ */
+.final{text-align:center;display:flex;flex-direction:column;align-items:center;gap:24px;}
+.final__q{font-family:var(--font-display);font-size:22px;font-weight:600;margin-top:16px;}
+.final__link{color:var(--cta-light);text-decoration:underline;text-underline-offset:4px;font-weight:500;}
+.final__link:hover{color:#fff;}
+.footer{border-top:1px solid var(--line);text-align:center;padding:40px 24px;color:var(--muted-2);font-size:14px;}
+
+/* ============================================================
+   LIGHTBOX (zoom de imagen al tocar)
+   ============================================================ */
+.lightbox{
+  position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;
+  padding:24px;background:rgba(0,0,0,.88);
+  opacity:0;pointer-events:none;transition:opacity .3s ease;cursor:zoom-out;
+}
+.lightbox.open{opacity:1;pointer-events:auto;}
+.lightbox img{
+  max-width:min(90vw,560px);max-height:90vh;border-radius:14px;
+  box-shadow:0 30px 90px rgba(0,0,0,.6);
+  transform:scale(.88);transition:transform .3s cubic-bezier(.2,.8,.2,1);
+}
+.lightbox.open img{transform:scale(1);}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:1199px){
+  .section{padding:60px 40px;}
+  .track{margin:0 -40px;padding-left:40px;padding-right:40px;}
+  .masonry{columns:2;}
+  .problem{padding-left:calc(50% + 80px);}
+  .problem:nth-child(even){padding-left:0;padding-right:calc(50% + 80px);}
+  .problem__text h3{font-size:32px;}
+  .problem__img{max-width:250px;}
+}
+@media (max-width:809px){
+  .section{padding:40px 20px;}
+  .videos__grid{grid-template-columns:1fr;}
+  .duo,.plans{grid-template-columns:1fr;}
+  .story{grid-template-columns:1fr;gap:32px;}
+  /* En móvil la línea pasa a la izquierda y TODOS los bloques se apilan a su derecha */
+  .spine{left:7px;transform:none;}
+  .problem,.problem:nth-child(even){padding-left:36px;padding-right:0;gap:20px;align-items:flex-start;text-align:left;}
+  .problem:nth-child(even) .problem__text{align-items:flex-start;}
+  .problem:nth-child(even) .problem__text .eyebrow{align-self:flex-start;}
+  .problem__text h3{font-size:24px;}
+  .problem__text p{font-size:14px;}
+  .dot{left:7px;top:14px;}
+  .problem__text,.problem__img{max-width:none;}
+  .problem__img{max-width:220px;}
+  .masonry{columns:1;}
+  .track{margin:0 -20px;padding-left:20px;padding-right:20px;}
+  .dcard{flex-basis:300px;}
+  .offer{padding:32px 24px;}
+  .cdbox b{width:60px;height:60px;font-size:24px;}
+}
+@media (prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto !important;transition:none !important;}
+}
+</style>
+</head>
+<body>
+
+<!-- ====================== 1 · HERO ====================== -->
+<header class="hero">
+  <div class="hero__inner">
+    <p class="hero__eyebrow">Para todo joven ambicioso:</p>
+    <h1>
+      <em>Transforma tus inseguridades</em> <b>en poder</b> <em>volviéndote más</em> <b>atractivo, confiado y productivo</b>
+    </h1>
+    <p class="lead">Sin pasarte años entrenando, dar vergüenza ajena o dejar tu vida social de lado.</p>
+
+    <!-- Vídeo principal (VSL). Sustituye data-yt por el ID de tu vídeo, o cambia el bloque por tu reproductor. -->
+    <div class="vsl" data-yt="" data-start="0">
+      <img src="https://framerusercontent.com/images/wzYGm6Y4cTfJ0Uh99q6D0a9n6g.png?width=1000&height=1000" alt="Vídeo de presentación de Heroes Academy">
+      <div class="vsl__play"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
+    </div>
+
+    <a class="btn" href="https://www.heroes.academy/questionario">Aplicar a Heroes Academy</a>
+    <div class="rating">
+      <div class="stars" aria-label="4.95 de 5">
+        <svg viewBox="0 0 24 24" fill="#00b67a"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
+        <svg viewBox="0 0 24 24" fill="#00b67a"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
+        <svg viewBox="0 0 24 24" fill="#00b67a"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
+        <svg viewBox="0 0 24 24" fill="#00b67a"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
+        <svg viewBox="0 0 24 24" fill="#00b67a"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
+      </div>
+      <p class="rating__label"><b>4.95/5</b> · Excelente: 485+ reviews</p>
+    </div>
+  </div>
+</header>
+
+<!-- ====================== 2 · VÍDEO-TESTIMONIOS ====================== -->
+<section class="section">
+  <h2 class="h2 center" style="font-size:clamp(28px,4vw,44px)">Escucha a otros Héroes</h2>
+  <div class="videos__grid" id="videos">
+    <!-- Las miniaturas cargan el iframe de YouTube al hacer clic (fachada) -->
+    <article class="video">
+      <div class="video__frame" data-yt="ocY3mGf9FbU" data-start="10">
+        <img src="https://i.ytimg.com/vi/ocY3mGf9FbU/hqdefault.jpg" alt="Testimonio en vídeo" loading="lazy">
+        <div class="video__play"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
+      </div>
+      <p class="video__caption">Ganó 29 kg de músculo, venció su timidez extrema y ahora es emprendedor (historia completa)</p>
+    </article>
+    <article class="video">
+      <div class="video__frame" data-yt="TSXHwYY60ds" data-start="0">
+        <img src="https://i.ytimg.com/vi/TSXHwYY60ds/hqdefault.jpg" alt="Testimonio en vídeo" loading="lazy">
+        <div class="video__play"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
+      </div>
+      <p class="video__caption">Con 15 años formó su grupo de amigos dentro de Heroes y está creciendo su marca personal de +100k seguidores</p>
+    </article>
+    <article class="video">
+      <div class="video__frame" data-yt="kKT94uxqweM" data-start="2">
+        <img src="https://i.ytimg.com/vi/kKT94uxqweM/hqdefault.jpg" alt="Testimonio en vídeo" loading="lazy">
+        <div class="video__play"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
+      </div>
+      <p class="video__caption">Era tímido, no podía hablar con chicas, y por $37 al mes se convirtió en un creador de contenido imparable</p>
+    </article>
+    <article class="video">
+      <div class="video__frame" data-yt="TSGAgG_Io-s" data-start="13">
+        <img src="https://i.ytimg.com/vi/TSGAgG_Io-s/hqdefault.jpg" alt="Testimonio en vídeo" loading="lazy">
+        <div class="video__play"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
+      </div>
+      <p class="video__caption">De hacer flexiones a las 3 AM sin resultados a transformar su físico y personalidad en 1 año y 5 meses</p>
+    </article>
+    <article class="video">
+      <div class="video__frame" data-yt="Al5tpQKeDaI" data-start="0">
+        <img src="https://i.ytimg.com/vi/Al5tpQKeDaI/hqdefault.jpg" alt="Testimonio en vídeo" loading="lazy">
+        <div class="video__play"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
+      </div>
+      <p class="video__caption">Le dijeron que dejara los estudios por falta de dinero, creó un imperio de hamburguesas en el colegio y ahora estudia gratis en Columbia ($100,000/año)</p>
+    </article>
+    <article class="video">
+      <div class="video__frame" data-yt="OLHwNvlE7P0" data-start="0">
+        <img src="https://i.ytimg.com/vi/OLHwNvlE7P0/hqdefault.jpg" alt="Testimonio en vídeo" loading="lazy">
+        <div class="video__play"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
+      </div>
+      <p class="video__caption">Era el "payaso" de la clase, vivía aislado jugando Rocket League, y ahora ayuda a cientos de personas como mentor de psicología</p>
+    </article>
+  </div>
+</section>
+
+<!-- ====================== 3 · HÉROES VS VILLANOS ====================== -->
+<section class="section">
+  <div class="head--center">
+    <h2 class="h2">Los Héroes y los Villanos siempre tienen el mismo trasfondo — <span class="accent">EL DOLOR</span></h2>
+    <p class="lead" style="margin-top:16px">La diferencia es qué deciden hacer con ello</p>
+  </div>
+  <div class="duo">
+    <div class="quote quote--villain">
+      <h3 class="danger">El Villano dice:</h3>
+      <p>"El mundo me ha hecho daño, le voy a hacer daño de nuevo"</p>
+    </div>
+    <div class="quote quote--hero">
+      <h3 class="success">El Héroe dice:</h3>
+      <p>"El mundo me ha hecho daño, no dejaré que haga daño a nadie más"</p>
+    </div>
+  </div>
+  <div class="choose">
+    <h3 class="h4">Tú eliges…</h3>
+    <p class="body" style="max-width:560px">Los villanos son usados por el dolor. <strong style="color:#fff">Los Héroes usan el dolor a su favor.</strong></p>
+  </div>
+</section>
+
+<!-- ====================== 4 · HISTORIA PERSONAL ====================== -->
+<section class="section">
+  <div class="story">
+    <div class="story__text">
+      <h2 class="h2">Mis inseguridades me volvieron más fuerte</h2>
+      <div class="story__lines">
+        <p>El dolor de no ser suficiente</p>
+        <p>El dolor de estar solo</p>
+        <p>El dolor de nunca ser respetado</p>
+        <p>Esto tenía que cambiar</p>
+        <p>Me prometí que iba a pegar un cambio tan increíble que <strong>lo único que quedaría de mí sería mi nombre</strong></p>
+        <p>Que la gente usaría mi apellido como motivación</p>
+        <p>Y gracias al Lifemaxxing… lo conseguí</p>
+      </div>
+      <a class="btn" href="https://www.heroes.academy/questionario" style="align-self:flex-start;margin-top:8px">Aplicar a Heroes Academy</a>
+    </div>
+    <div class="story__img">
+      <img src="https://framerusercontent.com/images/wzYGm6Y4cTfJ0Uh99q6D0a9n6g.png?width=1000&height=1000" alt="Transformación de un miembro de Heroes Academy" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- ====================== 5 · HEROES PROTOCOL ====================== -->
+<section class="section">
+  <div class="protocol__head">
+    <span class="eyebrow">Transforma tu dolor en progreso</span>
+    <h2>Heroes Protocol</h2>
+    <p class="lead">Los 10 problemas de todo hombre ambicioso:</p>
+  </div>
+  <div class="protocol__timeline" id="timeline">
+    <div class="spine"><div class="spine__fill" id="spineFill"></div></div>
+    <div class="problems">
+    <!-- Nota: la numeración salta del 7 al 9 igual que en el original -->
+    <article class="problem">
+      <span class="dot" aria-hidden="true"></span>
+      <div class="problem__text">
+        <span class="eyebrow">Problema 1</span>
+        <h3>Quiero cambiar pero no puedo</h3>
+        <p>Conozco la frustración de querer cambiar y alcanzar tu mejor versión pero no poder comenzar.</p>
+        <p>Tras años de prueba y error encontré que la clave del cambio está en tus creencias.</p>
+        <p>En Heroes Academy aprenderás a reconfigurar tus creencias para nunca más fallar un hábito y alcanzar la vida de tus sueños.</p>
+      </div>
+      <div class="problem__img"><img src="https://framerusercontent.com/images/T6lchkmb2yemtLISyujKSy8xOC4.png?width=774&height=774" alt="Quiero cambiar pero no puedo" loading="lazy"></div>
+    </article>
+    <article class="problem">
+      <span class="dot" aria-hidden="true"></span>
+      <div class="problem__text">
+        <span class="eyebrow">Problema 2</span>
+        <h3>Me cuesta ser social, soy tímido</h3>
+        <p>Te convertirás en un Maestro del Carisma y perderás la timidez mejorando tu inteligencia social y emocional.</p>
+        <p>En Heroes Academy aprenderás a ser una persona extrovertida y social para rodearte de amigos y personas de alto valor.</p>
+      </div>
+      <div class="problem__img"><img src="https://framerusercontent.com/images/On36jUDMm1cQjwFVenXoFMphiOo.png?width=774&height=774" alt="Me cuesta ser social" loading="lazy"></div>
+    </article>
+    <article class="problem">
+      <span class="dot" aria-hidden="true"></span>
+      <div class="problem__text">
+        <span class="eyebrow">Problema 3</span>
+        <h3>No estoy feliz con mi vida</h3>
+        <p>No hay nada peor que despertar sin ganas de hacer nada y estar sin energía todo el tiempo.</p>
+        <p>Te enseñaré a gestionar la ansiedad, acabar con tus adicciones y entender la ciencia de la felicidad para que empieces a disfrutar tu vida al máximo.</p>
+      </div>
+      <div class="problem__img"><img src="https://framerusercontent.com/images/74USCQC3i0GqjXJ7jdThDRbfteY.png?width=774&height=774" alt="No estoy feliz con mi vida" loading="lazy"></div>
+    </article>
+    <article class="problem">
+      <span class="dot" aria-hidden="true"></span>
+      <div class="problem__text">
+        <span class="eyebrow">Problema 4</span>
+        <h3>No soy atractivo, tengo poca autoestima</h3>
+        <p>Tener una autoestima baja te impide progresar en casi cualquier aspecto de la vida. Los mentores te enseñarán a acabar con tus inseguridades una a una.</p>
+        <p>Te convertirás en esa persona confiada y atractiva que siempre has querido ser, y disfrutarás todos los beneficios.</p>
+      </div>
+      <div class="problem__img"><img src="https://framerusercontent.com/images/KnKRAGwIGqHWNW2sZIx8iJocskc.png?width=774&height=774" alt="No soy atractivo" loading="lazy"></div>
+    </article>
+    <article class="problem">
+      <span class="dot" aria-hidden="true"></span>
+      <div class="problem__text">
+        <span class="eyebrow">Problema 5</span>
+        <h3>No me gusta mi físico, me incomoda</h3>
+        <p>Te brindaremos los mejores expertos, planes nutricionales y rutinas según tu nivel para que alcances el físico de un mismísimo Dios Griego.</p>
+      </div>
+      <div class="problem__img"><img src="https://framerusercontent.com/images/6wvcvJXizo6ZJl9yIqUVkINRg.png?width=774&height=774" alt="No me gusta mi físico" loading="lazy"></div>
+    </article>
+    <article class="problem">
+      <span class="dot" aria-hidden="true"></span>
+      <div class="problem__text">
+        <span class="eyebrow">Problema 6</span>
+        <h3>Las mujeres me rechazan, quiero pareja</h3>
+        <p>Seamos honestos: a todos nos interesa, pero muchos se quedan fuera simplemente por miedo.</p>
+        <p>En Heroes aprenderás a vencer ese miedo y la psicología detrás de la confianza para sentirte seguro frente a cualquier persona.</p>
+      </div>
+      <div class="problem__img"><img src="https://framerusercontent.com/images/W6mVuXPJtHSUn7ZVC0CM3EjdQc.png?width=975&height=975" alt="Las mujeres me rechazan" loading="lazy"></div>
+    </article>
+    <article class="problem">
+      <span class="dot" aria-hidden="true"></span>
+      <div class="problem__text">
+        <span class="eyebrow">Problema 7</span>
+        <h3>Quiero ser más productivo, procrastino mucho</h3>
+        <p>Si estás leyendo esto seguro tienes algún proyecto o ambición, y no hay nada peor que sentir que no puedes trabajar en tus metas.</p>
+        <p>Te enseñaremos las claves de la productividad para que te resulte fácil cumplir tus responsabilidades: mejores notas, escalar tu negocio o crecer en tu trabajo.</p>
+      </div>
+      <div class="problem__img"><img src="https://framerusercontent.com/images/N2ZMW4Nz5tCPVjzbJK7iN3uiRQY.png?width=774&height=774" alt="Quiero ser más productivo" loading="lazy"></div>
+    </article>
+    <article class="problem">
+      <span class="dot" aria-hidden="true"></span>
+      <div class="problem__text">
+        <span class="eyebrow">Problema 9</span>
+        <h3>Quiero ganar dinero y no sé cómo</h3>
+        <p>El 90% de los emprendedores van saltando de modelo de negocio en modelo de negocio sin lograr ningún resultado.</p>
+        <p>Uniéndote a Heroes aprenderás las bases de un modelo de negocio probado para empezar a generar ingresos y gozar de libertad financiera.</p>
+      </div>
+      <div class="problem__img"><img src="https://framerusercontent.com/images/n02anUFCV6qe7Z4n9IVfU2XCnF8.png?width=774&height=774" alt="Quiero ganar dinero" loading="lazy"></div>
+    </article>
+    <article class="problem">
+      <span class="dot" aria-hidden="true"></span>
+      <div class="problem__text">
+        <span class="eyebrow">Problema 10</span>
+        <h3>Quiero conocer gente con mi misma mentalidad, pero no la encuentro</h3>
+        <p>Imagínate +350 personas con tus mismos objetivos y ganas de progresar empujándose hacia el éxito. Serías imparable.</p>
+        <p>Dentro de la academia encontrarás +350 Héroes con quienes potenciar tu progreso, además de dinámicas y plataformas para formar tu tribu.</p>
+      </div>
+      <div class="problem__img"><img src="https://framerusercontent.com/images/sF9AAprtvoBbUJGZpvUwFZe5NbA.png?width=774&height=774" alt="Quiero conocer gente con mi mentalidad" loading="lazy"></div>
+    </article>
+  </div>
+  </div><!-- /protocol__timeline -->
+  <div class="protocol__cta">
+    <a class="btn" href="https://www.heroes.academy/questionario">Aplicar a Heroes Academy</a>
+  </div>
+</section>
+
+<!-- ====================== 6 · STACK DE VALOR ====================== -->
+<section class="section">
+  <div class="offer">
+    <h2>Dentro de Heroes Academy encontrarás:</h2>
+    <ul class="offer__list">
+      <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span>Más de 12 cursos y 80 horas de contenido para resolver los 9 problemas de todo joven ambicioso y cambiar tu vida <b class="accent">($2000)</b></span></li>
+      <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span>Una comunidad exclusiva llena de jóvenes con tu misma mentalidad y ambición que te empujarán a ser tu mejor versión <b class="accent">(Invaluable)</b></span></li>
+      <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span>Llamadas DIARIAS con los mentores expertos para resolver todas tus dudas y socializar con otros Héroes <b class="accent">($1500)</b></span></li>
+      <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span>Eventos y competencias con premios increíbles para forzarte al progreso <b class="accent">($250)</b></span></li>
+      <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span><b class="accent">BONUS:</b> Juego de cartas con desafíos para sacarte de tu zona de confort y convertirte en un Héroe progresivamente <b class="accent">($27)</b></span></li>
+      <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span><b class="accent">BONUS:</b> alekAI, la IA entrenada que te ayudará con las rutinas de gym, el skincare, planes nutricionales, dudas… <b class="accent">($400)</b></span></li>
+      <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span><b class="accent">BONUS:</b> Invitados de alto nivel para aprender de los mejores expertos en cada tópico <b class="accent">(No cabe el número)</b></span></li>
+    </ul>
+    <hr class="offer__divider">
+    <p class="offer__total">VALOR TOTAL: <s>$4117</s></p>
+    <div class="offer__price">
+      <p class="small">Hoy por solo</p>
+      <p class="big">$37<span class="per">(al mes)</span></p>
+      <p class="offer__urgency">El precio subirá pronto…</p>
+    </div>
+    <div class="offer__cta">
+      <a class="btn" href="https://www.heroes.academy/questionario">Aplicar a Heroes Academy</a>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== 7 · TESTIMONIOS ====================== -->
+<section class="section">
+  <div class="reviews__head">
+    <h2 class="h2">No confíes sólo en nuestras palabras — estudiantes reales, resultados reales.</h2>
+  </div>
+  <div class="masonry">
+    <figure class="review">
+      <div class="review__q">"</div>
+      <h3>Valor increíble a un precio increíble</h3>
+      <p>Todo es de altísimo valor. Te guía paso a paso para construir la vida que quieres, y la comunidad es muy unida: se siente el apoyo de todas las personas.</p>
+      <figcaption class="review__author"><img src="https://framerusercontent.com/images/mmkyJciWNO4aU1OvckSNBNoqyFM.png?width=73&height=73" alt="Fabián Ortiz" loading="lazy"><span>Fabián Ortiz</span></figcaption>
+    </figure>
+    <figure class="review">
+      <div class="review__q">"</div>
+      <h3>Qué barbaridad de curso</h3>
+      <p>Lo mucho que aprendes no tiene sentido: te muestran, súper guiado, cómo convertir tu vida ideal en algo que de verdad va a pasar.</p>
+      <figcaption class="review__author"><img src="https://framerusercontent.com/images/nt4OqZvzOdRMGpKFqfSpkjzTQc.png?width=73&height=73" alt="Pol Pallares" loading="lazy"><span>Pol Pallares</span></figcaption>
+    </figure>
+    <figure class="review">
+      <div class="review__q">"</div>
+      <h3>Me llevó al siguiente nivel</h3>
+      <p>No solo te da los métodos para llevar tu vida actual a tu vida deseada: reúne a una comunidad de jóvenes que te motivan a mejorar y crecer juntos.</p>
+      <figcaption class="review__author"><img src="https://framerusercontent.com/images/0Z9DhYunkDm8p8nk1CuN1xi2LOQ.png" alt="Felipe Morales" loading="lazy"><span>Felipe Morales</span></figcaption>
+    </figure>
+    <figure class="review">
+      <div class="review__q">"</div>
+      <h3>La review más completa</h3>
+      <p>Tras 4 meses puedo decir que la experiencia es extraordinaria: gente noble cuyo propósito es ayudar, y una cantidad enorme de información a un precio muy asequible.</p>
+      <figcaption class="review__author"><img src="https://framerusercontent.com/images/mTOdcWMynnm7DzJOv2dBeXjWk.png?width=73&height=73" alt="Rul hz" loading="lazy"><span>Rul hz</span></figcaption>
+    </figure>
+    <figure class="review">
+      <div class="review__q">"</div>
+      <h3>La mejor academia para invocar tus deseos</h3>
+      <p>Varios cursos para ser la mejor versión de vos mismo, con los mejores mentores y la mejor comunidad de desarrollo colectivo.</p>
+      <figcaption class="review__author"><img src="https://framerusercontent.com/images/iCSpAnKysC63yNyuQtgo5rsGA.png?width=73&height=73" alt="Lionel Cáceres" loading="lazy"><span>Lionel Cáceres</span></figcaption>
+    </figure>
+    <figure class="review">
+      <div class="review__q">"</div>
+      <h3>Un valor incalculable</h3>
+      <p>Contenido de muchísimo valor, especialmente sobre mentalidad y habilidades sociales: se hablan cosas que no encuentras en ningún otro lado.</p>
+      <figcaption class="review__author"><img src="https://framerusercontent.com/images/5tnOzDAVwreTsxJeGnt4QYTmhc.png?width=73&height=73" alt="Carlos Fuentetaja" loading="lazy"><span>Carlos Fuentetaja</span></figcaption>
+    </figure>
+    <figure class="review">
+      <div class="review__q">"</div>
+      <h3>Gracias</h3>
+      <p>El precio es ridículo para todo lo que hay dentro. Este curso va a reprogramar tu mente para convertirte en quien quieres ser.</p>
+      <figcaption class="review__author"><img src="https://framerusercontent.com/images/eO6l3mJe0jhIuG3Vrn3iWwGkpWw.png?width=73&height=73" alt="Luis Franjo" loading="lazy"><span>Luis Franjo</span></figcaption>
+    </figure>
+    <figure class="review">
+      <div class="review__q">"</div>
+      <h3>UNA LOCURA</h3>
+      <p>Desde el primer vídeo del primer curso ya notas un impacto positivo. El valor que hay aquí no lo encontrarás en ningún otro lado.</p>
+      <figcaption class="review__author"><img src="https://framerusercontent.com/images/v8F1TGni6gtWrJPzJmvNgScmJ40.png?width=73&height=73" alt="Miguel Ramírez" loading="lazy"><span>Miguel Ramírez</span></figcaption>
+    </figure>
+    <figure class="review">
+      <div class="review__q">"</div>
+      <h3>El mejor curso de todo Skool</h3>
+      <p>Una obra maestra: lo tiene absolutamente todo y desde el principio notas un gran cambio. La comunidad es de lo más unido que he visto. 10/10.</p>
+      <figcaption class="review__author"><img src="https://framerusercontent.com/images/sbqZDDYFj2mdlGArXBFSR0nStM.png?width=73&height=73" alt="Estudiante" loading="lazy"><span>..</span></figcaption>
+    </figure>
+    <figure class="review">
+      <div class="review__q">"</div>
+      <h3>Te da lo que te promete</h3>
+      <p>Presenta soluciones a la mayoría de los problemas de los jóvenes, con alternativas novedosas en cada curso para movilizarte hacia tus objetivos.</p>
+      <figcaption class="review__author"><img src="https://framerusercontent.com/images/gQpd0wKUwGsjNEYAXJAXNMN3jSg.png?width=73&height=73" alt="Santiago" loading="lazy"><span>Santiago</span></figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ====================== 8 · PRECIOS ====================== -->
+<section class="section">
+  <div class="pricing__head">
+    <h2 class="h2">Únete a Heroes Academy Ahora</h2>
+    <div class="rating">
+      <div class="stars" aria-label="4.9 de 5">
+        <svg viewBox="0 0 24 24" fill="#00b67a"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
+        <svg viewBox="0 0 24 24" fill="#00b67a"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
+        <svg viewBox="0 0 24 24" fill="#00b67a"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
+        <svg viewBox="0 0 24 24" fill="#00b67a"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
+        <svg viewBox="0 0 24 24" fill="#00b67a"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
+      </div>
+      <p class="rating__label"><b>4.9/5</b> · Excelente: 450+ reviews</p>
+    </div>
+  </div>
+  <div class="plans">
+    <div class="plan">
+      <p class="plan__name">Mensual</p>
+      <p class="plan__price"><b>$37</b><small>/ mes</small></p>
+      <ul class="plan__features">
+        <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span>Comunidad de +350 Héroes con tu misma mentalidad</span></li>
+        <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span>4 llamadas semanales EN VIVO con los mentores</span></li>
+        <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span>Acompañamiento exclusivo con todos los mentores</span></li>
+        <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span>15 módulos para dominar todos los aspectos de tu vida con el lifemaxxing</span></li>
+      </ul>
+      <a class="btn btn--full" href="https://www.heroes.academy/questionario">Quiero aplicar ahora</a>
+      <p class="plan__note">¡El precio subirá pronto!</p>
+    </div>
+    <div class="plan plan--featured">
+      <p class="plan__name">Anual</p>
+      <p class="plan__price"><s>$37</s><b>$16</b><small>/ mes</small></p>
+      <ul class="plan__features">
+        <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span>Todo lo anterior</span></li>
+        <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span>Un año de acceso a Heroes Academy y todas sus actualizaciones</span></li>
+        <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span>Disponibilidad instantánea a todo el contenido</span></li>
+        <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span>Contenido exclusivo</span></li>
+      </ul>
+      <a class="btn btn--full" href="https://www.heroes.academy/questionario">Quiero aplicar ahora</a>
+      <p class="plan__note">¡El precio subirá pronto!</p>
+    </div>
+  </div>
+  <div class="countdown" id="countdown" data-minutes="15">
+    <div class="cdbox"><b data-h>00</b><span>hours</span></div>
+    <div class="cdbox"><b data-m>15</b><span>minutes</span></div>
+    <div class="cdbox"><b data-s>00</b><span>seconds</span></div>
+  </div>
+</section>
+
+<!-- ====================== 9 · CARRUSEL DUDAS → RESULTADOS ====================== -->
+<section class="section">
+  <div class="doubts__head">
+    <h2 class="h2">Nuestros estudiantes tenían dudas — ahora tienen resultados</h2>
+    <div class="arrows">
+      <button class="arrow" id="prev" aria-label="Tarjetas anteriores"><svg viewBox="0 0 20 20" style="transform:rotate(180deg)"><path fill-rule="evenodd" d="M7.2 4.2a1 1 0 011.4 0l5 5a1 1 0 010 1.4l-5 5a1 1 0 11-1.4-1.4L11.5 10 7.2 5.7a1 1 0 010-1.4z" clip-rule="evenodd"/></svg></button>
+      <button class="arrow" id="next" aria-label="Tarjetas siguientes"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.2 4.2a1 1 0 011.4 0l5 5a1 1 0 010 1.4l-5 5a1 1 0 11-1.4-1.4L11.5 10 7.2 5.7a1 1 0 010-1.4z" clip-rule="evenodd"/></svg></button>
+    </div>
+  </div>
+  <div class="track" id="track">
+    <article class="dcard">
+      <h3>¿Te sientes estancado?</h3>
+      <p>Aquí te enseñan cosas de las que ningún youtuber de desarrollo personal habla. He mejorado mi vida de una manera que no creía posible.</p>
+      <div class="dcard__author"><img src="https://framerusercontent.com/images/n8CMl1N0nIdklbg4QxSaJkmOTgU.jpeg?width=400&height=400" alt="Miguel Romero" loading="lazy"><div><b>Miguel Romero</b></div></div>
+    </article>
+    <article class="dcard">
+      <h3>¿Te sientes perdido?</h3>
+      <p>Mi mayor problema era lo desubicado que me sentía con mis objetivos. Tras el primer curso, la claridad con la que ahora veo mis metas es súper reconfortante.</p>
+      <div class="dcard__author"><img src="https://framerusercontent.com/images/5pG8uAPn18sgxvw93tLdBNLx33M.jpg?width=240&height=240" alt="Emily Hart" loading="lazy"><div><b>Emily Hart</b></div></div>
+    </article>
+    <article class="dcard">
+      <h3>¿Realmente quieres cambiar?</h3>
+      <p>Casi un año desde que entré y mi vida no ha hecho más que evolucionar. Es un camino a la libertad y a una comunidad donde aprender, formarte y crecer.</p>
+      <div class="dcard__author"><img src="https://framerusercontent.com/images/aWYafYLl8eab3PyIdndkU8RQ0.jpeg?width=400&height=400" alt="Arn. Masllo" loading="lazy"><div><b>Arn. Masllo</b></div></div>
+    </article>
+    <article class="dcard">
+      <h3>LA LOCURA</h3>
+      <p>Retos, competencias, cientos de horas de cursos y una comunidad que te ayuda. Como miembro desde el inicio, puedo decir que me ha cambiado la vida.</p>
+      <div class="dcard__author"><img src="https://framerusercontent.com/images/OJgrSD1AWrK4TUzAYoKRKbC8kY.png?width=73&height=73" alt="Jagmer" loading="lazy"><div><b>Jagmer</b><small>Web Developer</small></div></div>
+    </article>
+    <article class="dcard">
+      <h3>TREMENDA OBRA MAESTRA 20/10</h3>
+      <p>Más que un starter pack es un mega bundle que vale la inversión. Más costoso será el arrepentimiento por no saber por dónde empezar.</p>
+      <div class="dcard__author"><img src="https://framerusercontent.com/images/MqVLvThvBRMWSDJXZDsn9wWB7KU.jpeg?width=400&height=400" alt="Valentino Guadarrama" loading="lazy"><div><b>Valentino Guadarrama</b></div></div>
+    </article>
+    <article class="dcard">
+      <h3>¿Te parece caro?</h3>
+      <p>Tiene literalmente todo para cambiar tu vida si te comprometes. No hay mejor inversión que en uno mismo. Recomendadísimo.</p>
+      <div class="dcard__author"><img src="https://framerusercontent.com/images/2gd3PCXPLCnyKcV4PaqAZr1C22Q.jpeg?width=400&height=400" alt="Cristián Rodríguez" loading="lazy"><div><b>Cristián Rodríguez</b></div></div>
+    </article>
+    <article class="dcard">
+      <h3>Un plan claro, paso a paso</h3>
+      <p>Es entrar y recibir un plan claro sobre qué hacer, cuándo hacerlo y cómo hacerlo. No hay forma de no mejorar si sigues lo que está acá.</p>
+      <div class="dcard__author"><img src="https://framerusercontent.com/images/iZJx2NBO7PgMtvYGFoYk1HXeyU.jpeg?width=400&height=400" alt="Felipe Martinez" loading="lazy"><div><b>Felipe Martinez</b></div></div>
+    </article>
+    <article class="dcard">
+      <h3>¿Qué hay dentro?</h3>
+      <p>Solo con las dos primeras clases mi vida ya cambió brutalmente, y la comunidad publica a diario guías y reflexiones de un valor incalculable.</p>
+      <div class="dcard__author"><img src="https://framerusercontent.com/images/HAg9nG5Pymlvhjq2tN94IvNHM.png?width=73&height=73" alt="Samuel" loading="lazy"><div><b>Samuel</b></div></div>
+    </article>
+  </div>
+</section>
+
+<!-- ====================== 10 · CTA FINAL ====================== -->
+<section class="section final">
+  <a class="btn" href="https://www.heroes.academy/questionario">Aplicar a Heroes Academy</a>
+  <p class="final__q">¿Aún no estás seguro?</p>
+  <a class="final__link" href="https://www.trustpilot.com/review/heroes.academy" target="_blank" rel="noopener noreferrer">Ver todos los casos de victoria</a>
+</section>
+
+<!-- ====================== FOOTER ====================== -->
+<footer class="footer">© Heroes</footer>
+
+<!-- Lightbox para ampliar imágenes al tocarlas -->
+<div class="lightbox" id="lightbox" aria-hidden="true"><img src="" alt=""></div>
+
+<script>
+/* ---------- Vídeos de YouTube + VSL del hero (carga al hacer clic) ---------- */
+document.querySelectorAll('.video__frame, .vsl').forEach(function(frame){
+  frame.addEventListener('click', function(){
+    var id = frame.getAttribute('data-yt');
+    if(!id) return; // VSL sin ID configurado todavía
+    var start = frame.getAttribute('data-start') || 0;
+    var iframe = document.createElement('iframe');
+    iframe.width = '100%';
+    iframe.height = '100%';
+    iframe.style.border = '0';
+    iframe.style.position = 'absolute';
+    iframe.style.inset = '0';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    iframe.allowFullscreen = true;
+    iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&start=' + start;
+    frame.innerHTML = '';
+    frame.appendChild(iframe);
+  });
+});
+
+/* ---------- Cuenta atrás de urgencia (evergreen, en memoria) ---------- */
+(function(){
+  var el = document.getElementById('countdown');
+  if(!el) return;
+  var total = (parseInt(el.dataset.minutes,10) || 15) * 60;
+  var h = el.querySelector('[data-h]'), m = el.querySelector('[data-m]'), s = el.querySelector('[data-s]');
+  function pad(n){return String(n).padStart(2,'0');}
+  function tick(){
+    var hr = Math.floor(total/3600), mn = Math.floor((total%3600)/60), sc = total%60;
+    h.textContent = pad(hr); m.textContent = pad(mn); s.textContent = pad(sc);
+    if(total > 0) total--;
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+
+/* ---------- Lightbox: ampliar imágenes al tocarlas ---------- */
+(function(){
+  var lb = document.getElementById('lightbox');
+  if(!lb) return;
+  var lbImg = lb.querySelector('img');
+
+  function open(src, alt){
+    lbImg.src = src; lbImg.alt = alt || '';
+    lb.classList.add('open'); lb.setAttribute('aria-hidden','false');
+  }
+  function close(){
+    lb.classList.remove('open'); lb.setAttribute('aria-hidden','true');
+  }
+
+  document.querySelectorAll('.problem__img, .story__img').forEach(function(box){
+    box.style.cursor = 'zoom-in';
+    box.addEventListener('click', function(){
+      var img = box.querySelector('img');
+      if(img){ open(img.currentSrc || img.src, img.alt); }
+    });
+  });
+  lb.addEventListener('click', close);
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ close(); } });
+})();
+
+/* ---------- Línea de tiempo: del PRIMER al ÚLTIMO punto, relleno y
+   revelado/coloreado de cada punto sincronizados con el extremo de la línea. */
+(function(){
+  var timeline = document.getElementById('timeline');
+  var spine = document.querySelector('.spine');
+  var fill = document.getElementById('spineFill');
+  if(!timeline || !spine || !fill) return;
+
+  var problems = [].slice.call(document.querySelectorAll('.problem'));
+  if(!problems.length) return;
+
+  // Centro de un punto en coordenadas de pantalla
+  function dotCenter(p){
+    var d = p.querySelector('.dot');
+    var r = (d || p).getBoundingClientRect();
+    return r.top + r.height / 2;
+  }
+
+  // Coloca la línea para que empiece en el PRIMER punto y acabe en el ÚLTIMO
+  function layoutSpine(){
+    var t = timeline.getBoundingClientRect();
+    var firstC = dotCenter(problems[0]);
+    var lastC  = dotCenter(problems[problems.length - 1]);
+    spine.style.top = (firstC - t.top) + 'px';
+    spine.style.bottom = 'auto';
+    spine.style.height = Math.max(0, lastC - firstC) + 'px';
+  }
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Movimiento reducido: línea completa, puntos coloreados y todo visible
+  if(reduce){
+    layoutSpine();
+    fill.style.height = '100%';
+    problems.forEach(function(p){ p.classList.add('reveal'); });
+    window.addEventListener('resize', layoutSpine);
+    window.addEventListener('load', layoutSpine);
+    return;
+  }
+
+  document.body.classList.add('reveal-on'); // activa el estado oculto del contenido
+
+  function update(){
+    var anchor = window.innerHeight * 0.5;               // centro de la pantalla
+    var tTop = timeline.getBoundingClientRect().top;
+    // 1) LEER la posición real de todos los puntos (lecturas antes que escrituras)
+    var centers = [];
+    for(var i=0;i<problems.length;i++){ centers.push(dotCenter(problems[i])); }
+    var firstC = centers[0], lastC = centers[centers.length - 1];
+    var spineH = Math.max(0, lastC - firstC);
+    var progress = spineH ? (anchor - firstC) / spineH : 0;
+    progress = Math.max(0, Math.min(1, progress));
+    // 2) ESCRIBIR: la línea va del PRIMER al ÚLTIMO punto y el relleno la sigue
+    //    (recalculado en vivo, así el relleno SIEMPRE llega al último punto).
+    spine.style.top = (firstC - tTop) + 'px';
+    spine.style.bottom = 'auto';
+    spine.style.height = spineH + 'px';
+    fill.style.height = (progress * 100) + '%';
+    // 3) Revelar/colorear cada punto según su posición respecto al centro
+    for(var j=0;j<problems.length;j++){
+      if(centers[j] <= anchor){ problems[j].classList.add('reveal'); }
+      else { problems[j].classList.remove('reveal'); }
+    }
+  }
+
+  function refresh(){ update(); }
+
+  var ticking = false;
+  function onScroll(){
+    if(!ticking){
+      requestAnimationFrame(function(){ update(); ticking = false; });
+      ticking = true;
+    }
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', refresh);
+  window.addEventListener('load', refresh);   // recalcular cuando carguen imágenes
+  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(refresh); } // y al cargar las fuentes
+  setTimeout(refresh, 500);                   // recálculo de seguridad
+  refresh();
+})();
+(function(){
+  var track = document.getElementById('track');
+  if(!track) return;
+  var card = track.querySelector('.dcard');
+  function step(dir){
+    var amount = (card ? card.offsetWidth : 380) + 24;
+    track.scrollBy({left: dir*amount, behavior:'smooth'});
+  }
+  document.getElementById('prev').addEventListener('click', function(){step(-1);});
+  document.getElementById('next').addEventListener('click', function(){step(1);});
+})();
+</script>
+</body>
+</html>
