@@ -17,23 +17,23 @@
    Cambia un valor aquí y se actualiza en toda la página.
    ============================================================ */
 :root{
-  --base:#0e0e0e;          /* fondo de la página       */
-  --surface:#161616;       /* fondo de tarjetas        */
-  --surface-2:rgba(255,255,255,.04);
-  --line:#292929;          /* bordes                   */
-  --line-soft:#3d3d3d;     /* bordes de tarjetas       */
-  --primary:#0968ff;       /* azul (acentos puntuales) */
+  --base:#e6e9ee;          /* fondo de la página (gris azulado frío) */
+  --surface:#ffffff;       /* fondo de tarjetas            */
+  --surface-2:rgba(0,0,0,.025);
+  --line:#e6e2db;          /* bordes                       */
+  --line-soft:#d8d3ca;     /* bordes de tarjetas           */
+  --primary:#0968ff;       /* azul (acentos puntuales)     */
   --primary-light:#3884ff;
-  --cta:#e55415;           /* NARANJA del botón CTA (como el original) */
-  --cta-light:#ff6a2b;     /* hover del botón          */
-  --accent:#ff9f40;        /* naranja acento           */
-  --accent-soft:rgba(255,159,64,.2);
-  --danger:#ff5c5c;        /* rojo (villano/urgencia)  */
-  --success:#80ffae;       /* verde (héroe/checks)     */
-  --white:#ffffff;
-  --muted:#bdbdbd;         /* texto secundario         */
-  --muted-2:#7d7f83;       /* texto terciario          */
-  --trust:#00b67a;         /* estrellas Trustpilot     */
+  --cta:#3a93e6;           /* AZUL claro del botón CTA     */
+  --cta-light:#5aa8f0;     /* hover del botón              */
+  --accent:#2b7fcc;        /* azul acento (legible)        */
+  --accent-soft:rgba(58,147,230,.14);
+  --danger:#d6443a;        /* rojo (villano/urgencia)      */
+  --success:#1a9d5f;       /* verde (héroe/checks)         */
+  --white:#1b1a18;         /* texto principal (oscuro)     */
+  --muted:#5d5a55;         /* texto secundario             */
+  --muted-2:#928e87;       /* texto terciario              */
+  --trust:#00b67a;         /* estrellas Trustpilot         */
 
   /* Tipografías */
   --font-body:"Inter","Inter Placeholder",sans-serif;
@@ -53,7 +53,14 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased;}
 html{scroll-behavior:smooth;}
 body{
-  background:var(--base);
+  /* Fondo claro tipo pared de piedra: color base + dos capas de
+     ruido fractal SVG a opacidad muy baja (mancha grande + grano fino).
+     Casi invisible, fijo al hacer scroll. */
+  background-color:var(--base);
+  background-image:
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><filter id='b'><feTurbulence type='fractalNoise' baseFrequency='0.012' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23b)' opacity='0.08'/></svg>"),
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23g)' opacity='0.09'/></svg>");
+  background-attachment:fixed,fixed;
   color:var(--white);
   font-family:var(--font-body);
   line-height:1.5;
@@ -88,7 +95,7 @@ a{color:inherit;text-decoration:none;}
 }
 .h2{font-family:var(--font-display);font-weight:600;font-size:44px;line-height:1;}
 .h4{font-family:var(--font-display);font-weight:600;font-size:28px;line-height:1.2;}
-.lead{font-family:var(--font-display);font-size:20px;line-height:1.4;color:#cccccc;}
+.lead{font-family:var(--font-display);font-size:20px;line-height:1.4;color:var(--muted);}
 .body{font-size:16px;line-height:1.5;color:var(--muted);}
 .caption{font-size:14px;color:var(--muted);font-weight:500;}
 .accent{color:var(--accent);}
@@ -144,6 +151,34 @@ a{color:inherit;text-decoration:none;}
 }
 .hero h1 em{font-style:italic;font-weight:600;}
 .hero h1 b{font-style:normal;font-weight:800;}
+/* Palabra clave del titular en azul, peso fuerte: da vida sin parecer enlace */
+.hero h1 .hl-blue{color:var(--accent);font-weight:800;font-style:normal;}
+/* Subtítulo del hero: más pequeño y en una sola línea */
+.hero__sub{font-size:clamp(14px,1.5vw,17px);white-space:nowrap;color:var(--muted);}
+
+/* Entrada armónica del hero: blur-in que sube y se enfoca, en cascada */
+@keyframes heroRise{
+  from{opacity:0;transform:translateY(34px) scale(.985);filter:blur(10px);}
+  to{opacity:1;transform:translateY(0) scale(1);filter:blur(0);}
+}
+.hero__eyebrow,.hero__sub{
+  opacity:0;
+  animation:heroRise 1.4s cubic-bezier(.16,1,.3,1) forwards;
+}
+.hero__eyebrow{animation-delay:.05s;}
+.hero__sub{animation-delay:.9s;}
+/* Titular: blur-in palabra a palabra, lo prepara el JS */
+.hero h1 .tw-word{
+  display:inline-block;
+  opacity:0;transform:translateY(28px) scale(.97);filter:blur(12px);
+  animation:heroRise 1.6s cubic-bezier(.16,1,.3,1) forwards;
+  animation-play-state:paused;
+}
+.hero h1.go .tw-word{animation-play-state:running;}
+@media (prefers-reduced-motion: reduce){
+  .hero__eyebrow,.hero__sub{opacity:1;animation:none;}
+  .hero h1 .tw-word{opacity:1;transform:none;filter:none;animation:none;}
+}
 .hero .lead{max-width:720px;}
 
 /* Vídeo principal (VSL) del hero */
@@ -152,6 +187,15 @@ a{color:inherit;text-decoration:none;}
   border-radius:14px;overflow:hidden;position:relative;cursor:pointer;
   border:1px solid var(--line);box-shadow:var(--shadow-lift);
   background:#0a0a0a;
+  animation:vslEnter 1s cubic-bezier(.22,1,.36,1) .35s both;
+}
+@keyframes vslEnter{
+  0%{opacity:0;transform:translateY(28px) scale(.92);}
+  62%{opacity:1;transform:translateY(0) scale(1.015);}
+  100%{opacity:1;transform:translateY(0) scale(1);}
+}
+@media (prefers-reduced-motion: reduce){
+  .vsl{animation:none;}
 }
 .vsl img{width:100%;height:100%;object-fit:cover;}
 .vsl__play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
@@ -160,8 +204,24 @@ a{color:inherit;text-decoration:none;}
   background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
   border:1px solid rgba(255,255,255,.3);
   display:flex;align-items:center;justify-content:center;
+  position:relative;
+  animation:vslBreathe 2.6s ease-in-out 2;
 }
+/* Ondas tipo sonar que salen del botón de play, animadas solo los primeros ~5s */
+.vsl__play span::before,
+.vsl__play span::after{
+  content:"";position:absolute;inset:-1px;border-radius:50%;
+  border:2px solid rgba(255,255,255,.55);
+  animation:vslPulse 2.6s cubic-bezier(.22,1,.36,1) 2;
+  pointer-events:none;
+}
+.vsl__play span::after{animation-delay:1.3s;}
+@keyframes vslBreathe{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+@keyframes vslPulse{0%{transform:scale(1);opacity:.6;}100%{transform:scale(2.1);opacity:0;}}
 .vsl__play svg{width:26px;height:26px;margin-left:4px;fill:#fff;}
+@media (prefers-reduced-motion: reduce){
+  .vsl__play span,.vsl__play span::before,.vsl__play span::after{animation:none;}
+}
 
 /* ============================================================
    2 · VÍDEO-TESTIMONIOS
@@ -231,11 +291,30 @@ a{color:inherit;text-decoration:none;}
   font-family:var(--font-display);font-weight:800;
   font-size:clamp(40px,6vw,64px);text-transform:uppercase;letter-spacing:-.02em;line-height:1;
 }
+/* Palabra con trazo "grafiti": SVG dibujado a mano bajo la palabra.
+   No parece un enlace; es un brochazo suelto que se dibuja al entrar en pantalla. */
+.scrawl{position:relative;display:inline-block;color:var(--accent);white-space:nowrap;}
+.scrawl svg{
+  position:absolute;left:-4%;bottom:-.32em;width:108%;height:.42em;
+  overflow:visible;pointer-events:none;
+}
+.scrawl svg path{
+  fill:none;stroke:var(--cta);stroke-width:7;stroke-linecap:round;stroke-linejoin:round;
+  filter:drop-shadow(0 1px 0 rgba(58,147,230,.25));
+  stroke-dasharray:640;stroke-dashoffset:640;
+}
+.scrawl.draw svg path{
+  animation:scrawlDraw 1s cubic-bezier(.65,0,.35,1) forwards;
+}
+@keyframes scrawlDraw{to{stroke-dashoffset:0;}}
+@media (prefers-reduced-motion: reduce){
+  .scrawl svg path{stroke-dashoffset:0;animation:none;}
+}
 /* Línea de tiempo central con relleno naranja al hacer scroll */
 .protocol__timeline{position:relative;}
 .spine{
   position:absolute;left:50%;top:0;bottom:0;width:3px;transform:translateX(-50%);
-  background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;z-index:0;
+  background:rgba(0,0,0,.08);border-radius:2px;overflow:hidden;z-index:0;
 }
 .spine__fill{
   position:absolute;left:0;top:0;width:100%;height:0;
@@ -263,15 +342,16 @@ body.reveal-on .problem.reveal .problem__img:hover{transform:rotate(0deg) scale(
 .dot{
   position:absolute;left:50%;top:18px;transform:translateX(-50%);
   width:15px;height:15px;border-radius:50%;
-  background:#4a4a4a;                          /* apagado, opaco */
-  z-index:3;box-shadow:0 0 0 16px var(--base);  /* hueco amplio alrededor */
+  background:var(--white);                     /* negro/relleno siempre visible */
+  z-index:4;                                   /* por encima de la línea: nunca la cruza */
+  box-shadow:0 0 0 4px var(--base);            /* pequeño hueco entre el punto y la línea */
   transition:background .25s ease;
 }
-.problem.reveal .dot{ background:#fff; }        /* blanco limpio al llegar la línea */
+.problem.reveal .dot{ background:var(--white); } /* oscuro al llegar la línea */
 .problem__text{display:flex;flex-direction:column;gap:18px;max-width:520px;}
 .problem__text h3{font-family:var(--font-display);font-size:36px;font-weight:600;line-height:1.08;letter-spacing:0;}
 /* "PROBLEMA N": texto naranja plano (sin píldora) */
-.problem__text .eyebrow{align-self:flex-start;background:none;box-shadow:none;padding:0;color:var(--cta);font-family:var(--font-mono);font-size:13px;letter-spacing:.12em;}
+.problem__text .eyebrow{align-self:flex-start;background:none;box-shadow:none;padding:0;color:var(--cta);font-family:var(--font-display);font-weight:700;font-size:16px;letter-spacing:.04em;text-transform:uppercase;}
 .problem__text p{color:var(--muted);font-size:16px;line-height:1.4;}
 .problem__img{
   position:relative;z-index:1;
@@ -281,7 +361,22 @@ body.reveal-on .problem.reveal .problem__img:hover{transform:rotate(0deg) scale(
   transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s ease;
 }
 .problem__img:hover{transform:rotate(0deg) scale(1.05);box-shadow:0 26px 70px rgba(0,0,0,.55);z-index:5;}
-.problem__img img{width:100%;height:100%;object-fit:cover;}
+.problem__img img{width:100%;height:100%;object-fit:cover;animation:imgKen 11s ease-in-out infinite alternate;will-change:transform;}
+@keyframes imgKen{from{transform:scale(1.005);}to{transform:scale(1.085);}}
+/* Origen y ritmo escalonados para variar el movimiento entre tarjetas */
+.problem:nth-child(1) .problem__img img{transform-origin:30% 35%;animation-duration:12s;}
+.problem:nth-child(2) .problem__img img{transform-origin:70% 40%;animation-duration:10.5s;animation-delay:-3s;}
+.problem:nth-child(3) .problem__img img{transform-origin:45% 60%;animation-duration:13s;animation-delay:-1.5s;}
+.problem:nth-child(4) .problem__img img{transform-origin:60% 30%;animation-duration:11s;animation-delay:-5s;}
+.problem:nth-child(5) .problem__img img{transform-origin:35% 55%;animation-duration:12.5s;animation-delay:-2s;}
+.problem:nth-child(6) .problem__img img{transform-origin:65% 50%;animation-duration:10s;animation-delay:-4s;}
+.problem:nth-child(7) .problem__img img{transform-origin:50% 35%;animation-duration:13.5s;animation-delay:-6s;}
+.problem:nth-child(8) .problem__img img{transform-origin:40% 60%;animation-duration:11.5s;animation-delay:-2.5s;}
+.problem:nth-child(9) .problem__img img{transform-origin:60% 45%;animation-duration:12s;animation-delay:-7s;}
+.problem:nth-child(10) .problem__img img{transform-origin:50% 50%;animation-duration:10.5s;animation-delay:-3.5s;}
+@media (prefers-reduced-motion: reduce){
+  .problem__img img{animation:none;}
+}
 .protocol__cta{text-align:center;margin-top:80px;}
 
 /* ============================================================
@@ -360,10 +455,10 @@ body.reveal-on .problem.reveal .problem__img:hover{transform:rotate(0deg) scale(
 .arrows{display:flex;gap:12px;}
 .arrow{
   width:44px;height:44px;border-radius:50%;background:var(--surface);
-  border:1px solid var(--line);color:#fff;cursor:pointer;
+  border:1px solid var(--line);color:var(--white);cursor:pointer;
   display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s;
 }
-.arrow:hover{background:rgba(255,255,255,.1);border-color:var(--line-soft);}
+.arrow:hover{background:rgba(0,0,0,.05);border-color:var(--line-soft);}
 .arrow:focus-visible{outline:2px solid var(--primary-light);outline-offset:2px;}
 .arrow svg{width:20px;height:20px;fill:currentColor;}
 .track{
@@ -389,7 +484,7 @@ body.reveal-on .problem.reveal .problem__img:hover{transform:rotate(0deg) scale(
 .final{text-align:center;display:flex;flex-direction:column;align-items:center;gap:24px;}
 .final__q{font-family:var(--font-display);font-size:22px;font-weight:600;margin-top:16px;}
 .final__link{color:var(--cta-light);text-decoration:underline;text-underline-offset:4px;font-weight:500;}
-.final__link:hover{color:#fff;}
+.final__link:hover{color:var(--white);}
 .footer{border-top:1px solid var(--line);text-align:center;padding:40px 24px;color:var(--muted-2);font-size:14px;}
 
 /* ============================================================
@@ -448,22 +543,32 @@ body.reveal-on .problem.reveal .problem__img:hover{transform:rotate(0deg) scale(
 </head>
 <body>
 
+<template id="__bundler_thumbnail" data-bg-color="#e6e9ee">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#e6e9ee"/>
+    <rect x="430" y="250" width="340" height="44" rx="10" fill="#1b1a18"/>
+    <rect x="360" y="320" width="480" height="44" rx="10" fill="#1b1a18"/>
+    <rect x="500" y="392" width="200" height="20" rx="8" fill="#3a93e6"/>
+    <rect x="470" y="470" width="260" height="60" rx="14" fill="#3a93e6"/>
+  </svg>
+</template>
+
 <!-- ====================== 1 · HERO ====================== -->
 <header class="hero">
   <div class="hero__inner">
-    <p class="hero__eyebrow">Para todo joven ambicioso:</p>
+    <p class="hero__eyebrow">Para mentes autistas y neurodivergentes:</p>
     <h1>
-      <em>Transforma tus inseguridades</em> <b>en poder</b> <em>volviéndote más</em> <b>atractivo, confiado y productivo</b>
+      <em>Deja de intentar</em> <b>encajar</b> <em>y descubre</em> cómo funciona realmente <span class="hl-blue">tu mente</span>
     </h1>
-    <p class="lead">Sin pasarte años entrenando, dar vergüenza ajena o dejar tu vida social de lado.</p>
+    <p class="lead hero__sub">Sin agotar tu batería social ni forzarte. Conecta con personas que te entienden sin dar explicaciones.</p>
 
-    <!-- Vídeo principal (VSL). Sustituye data-yt por el ID de tu vídeo, o cambia el bloque por tu reproductor. -->
-    <div class="vsl" data-yt="" data-start="0">
-      <img src="https://framerusercontent.com/images/wzYGm6Y4cTfJ0Uh99q6D0a9n6g.png?width=1000&height=1000" alt="Vídeo de presentación de Heroes Academy">
+    <!-- Vídeo principal (VSL): carga el reproductor de YouTube al hacer clic. -->
+    <div class="vsl" data-yt="zXULrqLEmXM" data-start="0">
+      <img src="https://i.ytimg.com/vi/zXULrqLEmXM/maxresdefault.jpg" alt="Vídeo de presentación">
       <div class="vsl__play"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
     </div>
 
-    <a class="btn" href="https://www.heroes.academy/questionario">Aplicar a Heroes Academy</a>
+    <a class="btn" href="https://www.heroes.academy/questionario">Únete a la lista de espera</a>
     <div class="rating">
       <div class="stars" aria-label="4.95 de 5">
         <svg viewBox="0 0 24 24" fill="#00b67a"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
@@ -477,205 +582,109 @@ body.reveal-on .problem.reveal .problem__img:hover{transform:rotate(0deg) scale(
   </div>
 </header>
 
-<!-- ====================== 2 · VÍDEO-TESTIMONIOS ====================== -->
-<section class="section">
-  <h2 class="h2 center" style="font-size:clamp(28px,4vw,44px)">Escucha a otros Héroes</h2>
-  <div class="videos__grid" id="videos">
-    <!-- Las miniaturas cargan el iframe de YouTube al hacer clic (fachada) -->
-    <article class="video">
-      <div class="video__frame" data-yt="ocY3mGf9FbU" data-start="10">
-        <img src="https://i.ytimg.com/vi/ocY3mGf9FbU/hqdefault.jpg" alt="Testimonio en vídeo" loading="lazy">
-        <div class="video__play"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
-      </div>
-      <p class="video__caption">Ganó 29 kg de músculo, venció su timidez extrema y ahora es emprendedor (historia completa)</p>
-    </article>
-    <article class="video">
-      <div class="video__frame" data-yt="TSXHwYY60ds" data-start="0">
-        <img src="https://i.ytimg.com/vi/TSXHwYY60ds/hqdefault.jpg" alt="Testimonio en vídeo" loading="lazy">
-        <div class="video__play"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
-      </div>
-      <p class="video__caption">Con 15 años formó su grupo de amigos dentro de Heroes y está creciendo su marca personal de +100k seguidores</p>
-    </article>
-    <article class="video">
-      <div class="video__frame" data-yt="kKT94uxqweM" data-start="2">
-        <img src="https://i.ytimg.com/vi/kKT94uxqweM/hqdefault.jpg" alt="Testimonio en vídeo" loading="lazy">
-        <div class="video__play"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
-      </div>
-      <p class="video__caption">Era tímido, no podía hablar con chicas, y por $37 al mes se convirtió en un creador de contenido imparable</p>
-    </article>
-    <article class="video">
-      <div class="video__frame" data-yt="TSGAgG_Io-s" data-start="13">
-        <img src="https://i.ytimg.com/vi/TSGAgG_Io-s/hqdefault.jpg" alt="Testimonio en vídeo" loading="lazy">
-        <div class="video__play"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
-      </div>
-      <p class="video__caption">De hacer flexiones a las 3 AM sin resultados a transformar su físico y personalidad en 1 año y 5 meses</p>
-    </article>
-    <article class="video">
-      <div class="video__frame" data-yt="Al5tpQKeDaI" data-start="0">
-        <img src="https://i.ytimg.com/vi/Al5tpQKeDaI/hqdefault.jpg" alt="Testimonio en vídeo" loading="lazy">
-        <div class="video__play"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
-      </div>
-      <p class="video__caption">Le dijeron que dejara los estudios por falta de dinero, creó un imperio de hamburguesas en el colegio y ahora estudia gratis en Columbia ($100,000/año)</p>
-    </article>
-    <article class="video">
-      <div class="video__frame" data-yt="OLHwNvlE7P0" data-start="0">
-        <img src="https://i.ytimg.com/vi/OLHwNvlE7P0/hqdefault.jpg" alt="Testimonio en vídeo" loading="lazy">
-        <div class="video__play"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
-      </div>
-      <p class="video__caption">Era el "payaso" de la clase, vivía aislado jugando Rocket League, y ahora ayuda a cientos de personas como mentor de psicología</p>
-    </article>
-  </div>
-</section>
-
-<!-- ====================== 3 · HÉROES VS VILLANOS ====================== -->
-<section class="section">
-  <div class="head--center">
-    <h2 class="h2">Los Héroes y los Villanos siempre tienen el mismo trasfondo — <span class="accent">EL DOLOR</span></h2>
-    <p class="lead" style="margin-top:16px">La diferencia es qué deciden hacer con ello</p>
-  </div>
-  <div class="duo">
-    <div class="quote quote--villain">
-      <h3 class="danger">El Villano dice:</h3>
-      <p>"El mundo me ha hecho daño, le voy a hacer daño de nuevo"</p>
-    </div>
-    <div class="quote quote--hero">
-      <h3 class="success">El Héroe dice:</h3>
-      <p>"El mundo me ha hecho daño, no dejaré que haga daño a nadie más"</p>
-    </div>
-  </div>
-  <div class="choose">
-    <h3 class="h4">Tú eliges…</h3>
-    <p class="body" style="max-width:560px">Los villanos son usados por el dolor. <strong style="color:#fff">Los Héroes usan el dolor a su favor.</strong></p>
-  </div>
-</section>
-
-<!-- ====================== 4 · HISTORIA PERSONAL ====================== -->
-<section class="section">
-  <div class="story">
-    <div class="story__text">
-      <h2 class="h2">Mis inseguridades me volvieron más fuerte</h2>
-      <div class="story__lines">
-        <p>El dolor de no ser suficiente</p>
-        <p>El dolor de estar solo</p>
-        <p>El dolor de nunca ser respetado</p>
-        <p>Esto tenía que cambiar</p>
-        <p>Me prometí que iba a pegar un cambio tan increíble que <strong>lo único que quedaría de mí sería mi nombre</strong></p>
-        <p>Que la gente usaría mi apellido como motivación</p>
-        <p>Y gracias al Lifemaxxing… lo conseguí</p>
-      </div>
-      <a class="btn" href="https://www.heroes.academy/questionario" style="align-self:flex-start;margin-top:8px">Aplicar a Heroes Academy</a>
-    </div>
-    <div class="story__img">
-      <img src="https://framerusercontent.com/images/wzYGm6Y4cTfJ0Uh99q6D0a9n6g.png?width=1000&height=1000" alt="Transformación de un miembro de Heroes Academy" loading="lazy">
-    </div>
-  </div>
-</section>
-
 <!-- ====================== 5 · HEROES PROTOCOL ====================== -->
 <section class="section">
   <div class="protocol__head">
-    <span class="eyebrow">Transforma tu dolor en progreso</span>
-    <h2>Heroes Protocol</h2>
-    <p class="lead">Los 10 problemas de todo hombre ambicioso:</p>
+    <h2>EL MÉTODO <span class="scrawl" id="scrawl">SINGULAR<svg viewBox="0 0 320 26" preserveAspectRatio="none" aria-hidden="true"><path d="M5 16 C 60 7, 120 6, 178 13 C 226 19, 270 21, 315 11 C 280 16, 150 18, 60 19"/></svg></span></h2>
+    <p class="lead" style="margin-top:18px;"><b>Los 10 problemas</b> a los que nos enfrentamos las personas autistas:</p>
   </div>
   <div class="protocol__timeline" id="timeline">
     <div class="spine"><div class="spine__fill" id="spineFill"></div></div>
     <div class="problems">
-    <!-- Nota: la numeración salta del 7 al 9 igual que en el original -->
     <article class="problem">
       <span class="dot" aria-hidden="true"></span>
       <div class="problem__text">
         <span class="eyebrow">Problema 1</span>
-        <h3>Quiero cambiar pero no puedo</h3>
-        <p>Conozco la frustración de querer cambiar y alcanzar tu mejor versión pero no poder comenzar.</p>
-        <p>Tras años de prueba y error encontré que la clave del cambio está en tus creencias.</p>
-        <p>En Heroes Academy aprenderás a reconfigurar tus creencias para nunca más fallar un hábito y alcanzar la vida de tus sueños.</p>
+        <h3>Me cuesta socializar y me agota</h3>
+        <p>En Singular Club aprenderás a gestionar tu batería social, a comunicarte de forma asertiva sin desgastarte y a encontrar el equilibrio entre adaptarte al entorno y proteger tu energía.</p>
       </div>
-      <div class="problem__img"><img src="https://framerusercontent.com/images/T6lchkmb2yemtLISyujKSy8xOC4.png?width=774&height=774" alt="Quiero cambiar pero no puedo" loading="lazy"></div>
+      <div class="problem__img"><img src="uploads/problema1-energia-social.png" alt="Me cuesta socializar y me agota" loading="lazy"></div>
     </article>
     <article class="problem">
       <span class="dot" aria-hidden="true"></span>
       <div class="problem__text">
         <span class="eyebrow">Problema 2</span>
-        <h3>Me cuesta ser social, soy tímido</h3>
-        <p>Te convertirás en un Maestro del Carisma y perderás la timidez mejorando tu inteligencia social y emocional.</p>
-        <p>En Heroes Academy aprenderás a ser una persona extrovertida y social para rodearte de amigos y personas de alto valor.</p>
+        <h3>No llevo bien mi diagnóstico</h3>
+        <p>En Singular Club te ayudamos a transicionar del shock inicial a la aceptación, y a reformar tu identidad autista SIN clichés y SIN frases motivacionales.</p>
       </div>
-      <div class="problem__img"><img src="https://framerusercontent.com/images/On36jUDMm1cQjwFVenXoFMphiOo.png?width=774&height=774" alt="Me cuesta ser social" loading="lazy"></div>
+      <div class="problem__img"><img src="uploads/problema2-identidad-propia.png" alt="No llevo bien mi diagnóstico" loading="lazy"></div>
     </article>
     <article class="problem">
       <span class="dot" aria-hidden="true"></span>
       <div class="problem__text">
         <span class="eyebrow">Problema 3</span>
-        <h3>No estoy feliz con mi vida</h3>
-        <p>No hay nada peor que despertar sin ganas de hacer nada y estar sin energía todo el tiempo.</p>
-        <p>Te enseñaré a gestionar la ansiedad, acabar con tus adicciones y entender la ciencia de la felicidad para que empieces a disfrutar tu vida al máximo.</p>
+        <h3>No me entiendo</h3>
+        <p>¿Por qué te colapsas en ciertos entornos? ¿Por qué procrastinas cosas sencillas? En Singular Club pondremos nombre y solución a esos bloqueos diarios que sufres sin saber por qué, mapeando a fondo tu mente autista.</p>
       </div>
-      <div class="problem__img"><img src="https://framerusercontent.com/images/74USCQC3i0GqjXJ7jdThDRbfteY.png?width=774&height=774" alt="No estoy feliz con mi vida" loading="lazy"></div>
+      <div class="problem__img"><img src="https://framerusercontent.com/images/74USCQC3i0GqjXJ7jdThDRbfteY.png?width=774&height=774" alt="No me entiendo" loading="lazy"></div>
     </article>
     <article class="problem">
       <span class="dot" aria-hidden="true"></span>
       <div class="problem__text">
         <span class="eyebrow">Problema 4</span>
-        <h3>No soy atractivo, tengo poca autoestima</h3>
-        <p>Tener una autoestima baja te impide progresar en casi cualquier aspecto de la vida. Los mentores te enseñarán a acabar con tus inseguridades una a una.</p>
-        <p>Te convertirás en esa persona confiada y atractiva que siempre has querido ser, y disfrutarás todos los beneficios.</p>
+        <h3>No conecto con la gente, no encajo</h3>
+        <p>Deja de intentar encajar en círculos que no te entienden. En nuestra comunidad conectarás con personas que procesan el mundo exactamente igual que tú. Aquí no hay que dar explicaciones, aquí ya hablas el idioma nativo.</p>
       </div>
-      <div class="problem__img"><img src="https://framerusercontent.com/images/KnKRAGwIGqHWNW2sZIx8iJocskc.png?width=774&height=774" alt="No soy atractivo" loading="lazy"></div>
+      <div class="problem__img"><img src="https://framerusercontent.com/images/KnKRAGwIGqHWNW2sZIx8iJocskc.png?width=774&height=774" alt="No conecto con la gente, no encajo" loading="lazy"></div>
     </article>
     <article class="problem">
       <span class="dot" aria-hidden="true"></span>
       <div class="problem__text">
         <span class="eyebrow">Problema 5</span>
-        <h3>No me gusta mi físico, me incomoda</h3>
-        <p>Te brindaremos los mejores expertos, planes nutricionales y rutinas según tu nivel para que alcances el físico de un mismísimo Dios Griego.</p>
+        <h3>Ser autista no tiene ventajas</h3>
+        <p>Sentirte frustrado por ser autista es como pagar una suscripción de 100€ al mes por un servicio que no usas y que no puedes cancelar. En Singular Club te enseñamos a abrir la aplicación, entender sus funciones premium y sacarle partido a las ventajas competitivas de tu enfoque y procesamiento.</p>
       </div>
-      <div class="problem__img"><img src="https://framerusercontent.com/images/6wvcvJXizo6ZJl9yIqUVkINRg.png?width=774&height=774" alt="No me gusta mi físico" loading="lazy"></div>
+      <div class="problem__img"><img src="https://framerusercontent.com/images/6wvcvJXizo6ZJl9yIqUVkINRg.png?width=774&height=774" alt="Ser autista no tiene ventajas" loading="lazy"></div>
     </article>
     <article class="problem">
       <span class="dot" aria-hidden="true"></span>
       <div class="problem__text">
         <span class="eyebrow">Problema 6</span>
-        <h3>Las mujeres me rechazan, quiero pareja</h3>
-        <p>Seamos honestos: a todos nos interesa, pero muchos se quedan fuera simplemente por miedo.</p>
-        <p>En Heroes aprenderás a vencer ese miedo y la psicología detrás de la confianza para sentirte seguro frente a cualquier persona.</p>
+        <h3>Quiero conocer personas neurodivergentes y no sé cómo</h3>
+        <p>Rompemos la barrera de la iniciativa social. En Singular Club creamos dinámicas, canales específicos y directos semanales para que conocer a otros neurodivergentes sea un proceso natural, seguro y sin la ansiedad de la charla superficial.</p>
       </div>
-      <div class="problem__img"><img src="https://framerusercontent.com/images/W6mVuXPJtHSUn7ZVC0CM3EjdQc.png?width=975&height=975" alt="Las mujeres me rechazan" loading="lazy"></div>
+      <div class="problem__img"><img src="https://framerusercontent.com/images/W6mVuXPJtHSUn7ZVC0CM3EjdQc.png?width=975&height=975" alt="Quiero conocer personas neurodivergentes" loading="lazy"></div>
     </article>
     <article class="problem">
       <span class="dot" aria-hidden="true"></span>
       <div class="problem__text">
         <span class="eyebrow">Problema 7</span>
-        <h3>Quiero ser más productivo, procrastino mucho</h3>
-        <p>Si estás leyendo esto seguro tienes algún proyecto o ambición, y no hay nada peor que sentir que no puedes trabajar en tus metas.</p>
-        <p>Te enseñaremos las claves de la productividad para que te resulte fácil cumplir tus responsabilidades: mejores notas, escalar tu negocio o crecer en tu trabajo.</p>
+        <h3>Me cuesta dormir, no descanso bien</h3>
+        <p>En Singular Club encontrarás las estrategias más efectivas para hacer dormir a esa mente autista y tener unos hábitos de sueño saludables.</p>
       </div>
-      <div class="problem__img"><img src="https://framerusercontent.com/images/N2ZMW4Nz5tCPVjzbJK7iN3uiRQY.png?width=774&height=774" alt="Quiero ser más productivo" loading="lazy"></div>
+      <div class="problem__img"><img src="https://framerusercontent.com/images/N2ZMW4Nz5tCPVjzbJK7iN3uiRQY.png?width=774&height=774" alt="Me cuesta dormir, no descanso bien" loading="lazy"></div>
+    </article>
+    <article class="problem">
+      <span class="dot" aria-hidden="true"></span>
+      <div class="problem__text">
+        <span class="eyebrow">Problema 8</span>
+        <h3>Hago stimmings que perjudican mi salud y no sé cómo cambiar</h3>
+        <p>El stimming es necesario para regularte, pero no tiene por qué dañarte. En la comunidad aprenderás técnicas de sustitución sensorial para redirigir esos impulsos hacia estímulos seguros que protejan tu salud física y mental.</p>
+      </div>
+      <div class="problem__img"><img src="https://framerusercontent.com/images/n02anUFCV6qe7Z4n9IVfU2XCnF8.png?width=774&height=774" alt="Hago stimmings que perjudican mi salud" loading="lazy"></div>
     </article>
     <article class="problem">
       <span class="dot" aria-hidden="true"></span>
       <div class="problem__text">
         <span class="eyebrow">Problema 9</span>
-        <h3>Quiero ganar dinero y no sé cómo</h3>
-        <p>El 90% de los emprendedores van saltando de modelo de negocio en modelo de negocio sin lograr ningún resultado.</p>
-        <p>Uniéndote a Heroes aprenderás las bases de un modelo de negocio probado para empezar a generar ingresos y gozar de libertad financiera.</p>
+        <h3>Tengo un estilo de vida sedentario, paso muchas horas en casa</h3>
+        <p>En Singular Club no te vamos a obligar a machacarte en el gimnasio ni a seguir dietas estrictas. Te guiaremos paso a paso para romper el bucle del sofá, ayudándote a encontrar una actividad física que estimule tu cuerpo sin saturar tu mente y que puedas mantener a largo plazo de forma natural.</p>
       </div>
-      <div class="problem__img"><img src="https://framerusercontent.com/images/n02anUFCV6qe7Z4n9IVfU2XCnF8.png?width=774&height=774" alt="Quiero ganar dinero" loading="lazy"></div>
+      <div class="problem__img"><img src="https://framerusercontent.com/images/sF9AAprtvoBbUJGZpvUwFZe5NbA.png?width=774&height=774" alt="Estilo de vida sedentario" loading="lazy"></div>
     </article>
     <article class="problem">
       <span class="dot" aria-hidden="true"></span>
       <div class="problem__text">
         <span class="eyebrow">Problema 10</span>
-        <h3>Quiero conocer gente con mi misma mentalidad, pero no la encuentro</h3>
-        <p>Imagínate +350 personas con tus mismos objetivos y ganas de progresar empujándose hacia el éxito. Serías imparable.</p>
-        <p>Dentro de la academia encontrarás +350 Héroes con quienes potenciar tu progreso, además de dinámicas y plataformas para formar tu tribu.</p>
+        <h3>He ido a psicólogos o terapeutas, pero siento que no me entienden</h3>
+        <p>En Singular Club estamos creando una biblioteca de recursos especializados. Contaremos con profesionales que subirán contenido directo y responderán a las dudas de la comunidad a través de la plataforma.</p>
       </div>
-      <div class="problem__img"><img src="https://framerusercontent.com/images/sF9AAprtvoBbUJGZpvUwFZe5NbA.png?width=774&height=774" alt="Quiero conocer gente con mi mentalidad" loading="lazy"></div>
+      <div class="problem__img"><img src="https://framerusercontent.com/images/T6lchkmb2yemtLISyujKSy8xOC4.png?width=774&height=774" alt="He ido a psicólogos o terapeutas" loading="lazy"></div>
     </article>
   </div>
   </div><!-- /protocol__timeline -->
   <div class="protocol__cta">
-    <a class="btn" href="https://www.heroes.academy/questionario">Aplicar a Heroes Academy</a>
+    <a class="btn" href="https://www.heroes.academy/questionario">Únete a la lista de espera</a>
   </div>
 </section>
 
@@ -700,7 +709,7 @@ body.reveal-on .problem.reveal .problem__img:hover{transform:rotate(0deg) scale(
       <p class="offer__urgency">El precio subirá pronto…</p>
     </div>
     <div class="offer__cta">
-      <a class="btn" href="https://www.heroes.academy/questionario">Aplicar a Heroes Academy</a>
+      <a class="btn" href="https://www.heroes.academy/questionario">Únete a la lista de espera</a>
     </div>
   </div>
 </section>
@@ -774,116 +783,7 @@ body.reveal-on .problem.reveal .problem__img:hover{transform:rotate(0deg) scale(
   </div>
 </section>
 
-<!-- ====================== 8 · PRECIOS ====================== -->
-<section class="section">
-  <div class="pricing__head">
-    <h2 class="h2">Únete a Heroes Academy Ahora</h2>
-    <div class="rating">
-      <div class="stars" aria-label="4.9 de 5">
-        <svg viewBox="0 0 24 24" fill="#00b67a"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
-        <svg viewBox="0 0 24 24" fill="#00b67a"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
-        <svg viewBox="0 0 24 24" fill="#00b67a"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
-        <svg viewBox="0 0 24 24" fill="#00b67a"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
-        <svg viewBox="0 0 24 24" fill="#00b67a"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
-      </div>
-      <p class="rating__label"><b>4.9/5</b> · Excelente: 450+ reviews</p>
-    </div>
-  </div>
-  <div class="plans">
-    <div class="plan">
-      <p class="plan__name">Mensual</p>
-      <p class="plan__price"><b>$37</b><small>/ mes</small></p>
-      <ul class="plan__features">
-        <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span>Comunidad de +350 Héroes con tu misma mentalidad</span></li>
-        <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span>4 llamadas semanales EN VIVO con los mentores</span></li>
-        <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span>Acompañamiento exclusivo con todos los mentores</span></li>
-        <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span>15 módulos para dominar todos los aspectos de tu vida con el lifemaxxing</span></li>
-      </ul>
-      <a class="btn btn--full" href="https://www.heroes.academy/questionario">Quiero aplicar ahora</a>
-      <p class="plan__note">¡El precio subirá pronto!</p>
-    </div>
-    <div class="plan plan--featured">
-      <p class="plan__name">Anual</p>
-      <p class="plan__price"><s>$37</s><b>$16</b><small>/ mes</small></p>
-      <ul class="plan__features">
-        <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span>Todo lo anterior</span></li>
-        <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span>Un año de acceso a Heroes Academy y todas sus actualizaciones</span></li>
-        <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span>Disponibilidad instantánea a todo el contenido</span></li>
-        <li class="check"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z" clip-rule="evenodd"/></svg><span>Contenido exclusivo</span></li>
-      </ul>
-      <a class="btn btn--full" href="https://www.heroes.academy/questionario">Quiero aplicar ahora</a>
-      <p class="plan__note">¡El precio subirá pronto!</p>
-    </div>
-  </div>
-  <div class="countdown" id="countdown" data-minutes="15">
-    <div class="cdbox"><b data-h>00</b><span>hours</span></div>
-    <div class="cdbox"><b data-m>15</b><span>minutes</span></div>
-    <div class="cdbox"><b data-s>00</b><span>seconds</span></div>
-  </div>
-</section>
 
-<!-- ====================== 9 · CARRUSEL DUDAS → RESULTADOS ====================== -->
-<section class="section">
-  <div class="doubts__head">
-    <h2 class="h2">Nuestros estudiantes tenían dudas — ahora tienen resultados</h2>
-    <div class="arrows">
-      <button class="arrow" id="prev" aria-label="Tarjetas anteriores"><svg viewBox="0 0 20 20" style="transform:rotate(180deg)"><path fill-rule="evenodd" d="M7.2 4.2a1 1 0 011.4 0l5 5a1 1 0 010 1.4l-5 5a1 1 0 11-1.4-1.4L11.5 10 7.2 5.7a1 1 0 010-1.4z" clip-rule="evenodd"/></svg></button>
-      <button class="arrow" id="next" aria-label="Tarjetas siguientes"><svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.2 4.2a1 1 0 011.4 0l5 5a1 1 0 010 1.4l-5 5a1 1 0 11-1.4-1.4L11.5 10 7.2 5.7a1 1 0 010-1.4z" clip-rule="evenodd"/></svg></button>
-    </div>
-  </div>
-  <div class="track" id="track">
-    <article class="dcard">
-      <h3>¿Te sientes estancado?</h3>
-      <p>Aquí te enseñan cosas de las que ningún youtuber de desarrollo personal habla. He mejorado mi vida de una manera que no creía posible.</p>
-      <div class="dcard__author"><img src="https://framerusercontent.com/images/n8CMl1N0nIdklbg4QxSaJkmOTgU.jpeg?width=400&height=400" alt="Miguel Romero" loading="lazy"><div><b>Miguel Romero</b></div></div>
-    </article>
-    <article class="dcard">
-      <h3>¿Te sientes perdido?</h3>
-      <p>Mi mayor problema era lo desubicado que me sentía con mis objetivos. Tras el primer curso, la claridad con la que ahora veo mis metas es súper reconfortante.</p>
-      <div class="dcard__author"><img src="https://framerusercontent.com/images/5pG8uAPn18sgxvw93tLdBNLx33M.jpg?width=240&height=240" alt="Emily Hart" loading="lazy"><div><b>Emily Hart</b></div></div>
-    </article>
-    <article class="dcard">
-      <h3>¿Realmente quieres cambiar?</h3>
-      <p>Casi un año desde que entré y mi vida no ha hecho más que evolucionar. Es un camino a la libertad y a una comunidad donde aprender, formarte y crecer.</p>
-      <div class="dcard__author"><img src="https://framerusercontent.com/images/aWYafYLl8eab3PyIdndkU8RQ0.jpeg?width=400&height=400" alt="Arn. Masllo" loading="lazy"><div><b>Arn. Masllo</b></div></div>
-    </article>
-    <article class="dcard">
-      <h3>LA LOCURA</h3>
-      <p>Retos, competencias, cientos de horas de cursos y una comunidad que te ayuda. Como miembro desde el inicio, puedo decir que me ha cambiado la vida.</p>
-      <div class="dcard__author"><img src="https://framerusercontent.com/images/OJgrSD1AWrK4TUzAYoKRKbC8kY.png?width=73&height=73" alt="Jagmer" loading="lazy"><div><b>Jagmer</b><small>Web Developer</small></div></div>
-    </article>
-    <article class="dcard">
-      <h3>TREMENDA OBRA MAESTRA 20/10</h3>
-      <p>Más que un starter pack es un mega bundle que vale la inversión. Más costoso será el arrepentimiento por no saber por dónde empezar.</p>
-      <div class="dcard__author"><img src="https://framerusercontent.com/images/MqVLvThvBRMWSDJXZDsn9wWB7KU.jpeg?width=400&height=400" alt="Valentino Guadarrama" loading="lazy"><div><b>Valentino Guadarrama</b></div></div>
-    </article>
-    <article class="dcard">
-      <h3>¿Te parece caro?</h3>
-      <p>Tiene literalmente todo para cambiar tu vida si te comprometes. No hay mejor inversión que en uno mismo. Recomendadísimo.</p>
-      <div class="dcard__author"><img src="https://framerusercontent.com/images/2gd3PCXPLCnyKcV4PaqAZr1C22Q.jpeg?width=400&height=400" alt="Cristián Rodríguez" loading="lazy"><div><b>Cristián Rodríguez</b></div></div>
-    </article>
-    <article class="dcard">
-      <h3>Un plan claro, paso a paso</h3>
-      <p>Es entrar y recibir un plan claro sobre qué hacer, cuándo hacerlo y cómo hacerlo. No hay forma de no mejorar si sigues lo que está acá.</p>
-      <div class="dcard__author"><img src="https://framerusercontent.com/images/iZJx2NBO7PgMtvYGFoYk1HXeyU.jpeg?width=400&height=400" alt="Felipe Martinez" loading="lazy"><div><b>Felipe Martinez</b></div></div>
-    </article>
-    <article class="dcard">
-      <h3>¿Qué hay dentro?</h3>
-      <p>Solo con las dos primeras clases mi vida ya cambió brutalmente, y la comunidad publica a diario guías y reflexiones de un valor incalculable.</p>
-      <div class="dcard__author"><img src="https://framerusercontent.com/images/HAg9nG5Pymlvhjq2tN94IvNHM.png?width=73&height=73" alt="Samuel" loading="lazy"><div><b>Samuel</b></div></div>
-    </article>
-  </div>
-</section>
-
-<!-- ====================== 10 · CTA FINAL ====================== -->
-<section class="section final">
-  <a class="btn" href="https://www.heroes.academy/questionario">Aplicar a Heroes Academy</a>
-  <p class="final__q">¿Aún no estás seguro?</p>
-  <a class="final__link" href="https://www.trustpilot.com/review/heroes.academy" target="_blank" rel="noopener noreferrer">Ver todos los casos de victoria</a>
-</section>
-
-<!-- ====================== FOOTER ====================== -->
-<footer class="footer">© Heroes</footer>
 
 <!-- Lightbox para ampliar imágenes al tocarlas -->
 <div class="lightbox" id="lightbox" aria-hidden="true"><img src="" alt=""></div>
@@ -1041,6 +941,73 @@ document.querySelectorAll('.video__frame, .vsl').forEach(function(frame){
   }
   document.getElementById('prev').addEventListener('click', function(){step(-1);});
   document.getElementById('next').addEventListener('click', function(){step(1);});
+})();
+(function(){
+  var el = document.getElementById('scrawl');
+  if(!el) return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){ el.classList.add('draw'); return; }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ el.classList.add('draw'); io.disconnect(); }
+    });
+  }, {threshold:.7});
+  io.observe(el);
+})();
+(function(){
+  var h1 = document.querySelector('.hero h1');
+  if(!h1) return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  // Envuelve cada PALABRA (conservando los estilos de em/b/span) en un span en línea.
+  var words = [];
+  var textNodes = [];
+  (function collect(node){
+    for(var i=0;i<node.childNodes.length;i++){
+      var n = node.childNodes[i];
+      if(n.nodeType === 3){ if(n.nodeValue.trim().length) textNodes.push(n); }
+      else if(n.nodeType === 1){ collect(n); }
+    }
+  })(h1);
+  textNodes.forEach(function(n){
+    var frag = document.createDocumentFragment();
+    // separa por palabras conservando los espacios
+    var parts = n.nodeValue.split(/(\s+)/);
+    parts.forEach(function(p){
+      if(p === '') return;
+      if(/^\s+$/.test(p)){ frag.appendChild(document.createTextNode(p)); return; }
+      var s = document.createElement('span');
+      s.className = 'tw-word';
+      s.textContent = p;
+      frag.appendChild(s);
+      words.push(s);
+    });
+    n.parentNode.replaceChild(frag, n);
+  });
+
+  // Desfase incremental por palabra para la cascada del blur-in
+  words.forEach(function(w,i){ w.style.animationDelay = (0.15 + i*0.06) + 's'; });
+  requestAnimationFrame(function(){ h1.classList.add('go'); });
+})();
+(function(){
+  // Entrada del vídeo (VSL): aparece subiendo y enfocándose al entrar en pantalla
+  var vsl = document.querySelector('.vsl');
+  if(!vsl) return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  vsl.style.opacity = '0';
+  vsl.style.transform = 'translateY(40px) scale(.985)';
+  vsl.style.filter = 'blur(10px)';
+  vsl.style.transition = 'opacity 1.1s cubic-bezier(.16,1,.3,1), transform 1.1s cubic-bezier(.16,1,.3,1), filter 1.1s cubic-bezier(.16,1,.3,1)';
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        vsl.style.opacity = '1';
+        vsl.style.transform = 'none';
+        vsl.style.filter = 'none';
+        io.disconnect();
+      }
+    });
+  }, {threshold:.25});
+  io.observe(vsl);
 })();
 </script>
 </body>
